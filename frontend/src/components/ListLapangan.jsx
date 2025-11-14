@@ -1,7 +1,10 @@
 import React from "react";
 import { lapangan, assets } from "../assets/assets";
+import { useNavigate }  from "react-router-dom";
 
 const ListLapangan = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="w-full">
       {/* HERO SECTION (ada background image) */}
@@ -39,7 +42,8 @@ const ListLapangan = () => {
         {/* GRID LAPANGAN */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-5 w-full">
           {lapangan.map((item) => (
-            <a
+            <div
+              onClick={() => navigate(`/booking/${item.id}`)}
               key={item.id}
               href="#"
               className="block rounded-lg p-4 bg-white shadow-xs shadow-indigo-100 transition-all duration-300 hover:-translate-y-2 cursor-pointer hover:shadow-lg"
@@ -142,7 +146,7 @@ const ListLapangan = () => {
                   </div>
                 </div>
               </div>
-            </a>
+            </div>
           ))}
         </div>
       </div>

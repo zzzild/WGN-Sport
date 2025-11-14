@@ -1,11 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { assets } from "../assets/assets"; // ← pastikan logo ada di sini
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
   const token = true;
   const [showMenu, setShowMenu] = useState(false)
+
+  const shouldHaveBg = () => {
+  // exact match
+  const exactMatch = [
+    "/login",
+    "/my-profile",
+    "/my-booking"
+  ];
+
+  if (exactMatch.includes(location.pathname)) return true;
+
+
+  return false;
+};
+
 
 
   const navLinkClass = ({ isActive }) =>
@@ -18,6 +35,8 @@ const Navbar = () => {
   const [isFixed, setIsFixed] = useState(false);
 
   useEffect(() => {
+
+
     const handleScroll = () => {
       setIsFixed(window.scrollY > 0);
     };
@@ -28,11 +47,15 @@ const Navbar = () => {
 
   return (
     <header
-      className={`left-0 top-0 z-10 flex w-full items-center ${
-        isFixed
-          ? "fixed z-[9999] bg-[#0d1b1e]/90 backdrop-blur-md shadow-inner transition"
-          : "absolute"
-      }`}
+      className={`left-0 top-0 z-10 flex w-full items-center
+    ${
+      shouldHaveBg()
+        ? "fixed bg-[#0d1b1e]/90 backdrop-blur-md shadow-inner"
+        : isFixed
+        ? "fixed bg-[#0d1b1e]/90 backdrop-blur-md shadow-inner"
+        : "absolute"
+    }
+  `}
     >
       <div className="max-w-7xl px-4 sm:px-6 lg:px-8 w-full mx-auto">
         <div className="relative flex h-20 items-center justify-between">
@@ -88,7 +111,7 @@ const Navbar = () => {
                       Profile Saya
                     </p>
                     <p
-                      onClick={() => navigate("my-appointments")}
+                      onClick={() => navigate("my-booking")}
                       className="cursor-pointer text-gray-500 hover:bg-gray-100 hover:text-gray-700 rounded-lg px-4 py-2"
                     >
                       Jadwal Saya
