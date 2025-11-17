@@ -20,8 +20,6 @@ import cross_icon from './cross_icon.png'
 import menu_icon from './menu_icon.svg'
 
 
-
-
 export const assets = {
     logo, header_img, background_img,
     musolah_img, toilet_img, parkir_img,
@@ -29,7 +27,6 @@ export const assets = {
     lapangan2_img, lapangan3_img, lapangan4_img, lapangan5_img,
     lapangan6_img, lapangan7_img, profile_pic, dropdown_icon,
     cross_icon, menu_icon
-
 }
 
 export const fasilitasData = [
