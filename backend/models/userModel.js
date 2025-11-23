@@ -16,6 +16,7 @@ const userSchema = new mongoose.Schema({
     address: {type:String, default:""},
     gender: {type: String, default: "Not Selected", maxLength:20},
     phone: {type: Number, default: "0000000000000", maxLength:13},
+    role: {type: String, default: "user"}
 })
 
 const userModel = mongoose.models.user || mongoose.model('user', userSchema)
