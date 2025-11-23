@@ -5,6 +5,7 @@ import { v2 as cloudinary } from "cloudinary";
 import lapanganModel from "../models/lapanganModel.js";
 import userModel from "../models/userModel.js";
 import bookingModel from "../models/bookingModel.js";
+import { now } from "mongoose";
 
 // API REGIST USER
 const registerUser = async (req, res) => {
@@ -151,4 +152,55 @@ const updateProfile = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser, getProfile, updateProfile };
+const bookingLapangan = async (req, res) => {
+  try {
+    const {lapanganId, slotTime, slotDate} = req.body;
+  const userId = req.userId
+
+  const lapanganDataFull = await lapanganModel.findOne({lapanganId}).select("-password")
+
+  if (!lapanganDataFull || !lapanganDataFull.available) {
+    return res.json({success: false, message:"Lapangan tidak tersediaa"});
+  }
+
+  let slots_booked = {...lapanganDataFull.slots_booked};
+
+  if (slots_booked[slotDate]) {
+    if (slots_booked[slotDate].includes(slotTime)) {
+      return res.json({success: false, message:"Slot tidak tersedia"})
+    } else {
+      slots_booked[slotDate].push(slotTime);
+    }
+  } else {
+    slots_booked[slotDate] = [slotTime];
+  }
+
+  const userData = await userModel.findOne({userId}).select("-password");
+
+  const bookingData = {
+    userId,
+    lapanganId,
+    userData,
+    lapanganData: {
+      name: lapanganDataFull.name,
+      image: lapanganDataFull.image
+    },
+    amount: lapanganDataFull.price,
+    slotTime,
+    slotDate,
+    date: Date.now()
+  };
+  const newBooking = new bookingModel(bookingData);
+  await newBooking.save();
+
+  await lapanganModel.findOneAndUpdate({lapanganId}, {slots_booked});
+
+  res.json({success:true, message: "Booking berhasil"})
+
+  } catch (error) {
+    console.log(error)
+    res.json({success:false, message:error.message})
+  }
+};
+
+export { loginUser, registerUser, getProfile, updateProfile, bookingLapangan };
