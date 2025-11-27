@@ -203,4 +203,18 @@ const bookingLapangan = async (req, res) => {
   }
 };
 
-export { loginUser, registerUser, getProfile, updateProfile, bookingLapangan };
+const listBooking = async (req, res) => {
+  try {
+    const userId = req.userId;
+    const booking = await bookingModel.find({userId})
+
+    res.json({success: true, booking})
+  } catch (error) {
+    console.log(error)
+    res.json({success:false, message:error.message})
+  }
+}
+
+
+
+export { loginUser, registerUser, getProfile, updateProfile, bookingLapangan, listBooking };

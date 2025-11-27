@@ -8,6 +8,6 @@ const adminRouter = express.Router()
 adminRouter.post('/login', loginAdmin)
 adminRouter.post('/regist', registerAdmin)
 adminRouter.post('/add-lapangan', authAdmin, upload.single('image'), addLapangan)
-adminRouter.get('/all-lapangan', authAdmin, allLapangan)
+
 
 export default adminRouter

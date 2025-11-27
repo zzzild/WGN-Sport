@@ -1,5 +1,5 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Lapangan from "./pages/Lapangan";
 import Tentang from "./pages/Tentang";
@@ -9,11 +9,20 @@ import Footer from "./components/Footer";
 import MyProfile from "./pages/MyProfile";
 import MyBooking from "./pages/MyBooking";
 import Booking from "./pages/Booking";
+import { ToastContainer } from 'react-toastify'
 
 function App() {
+  const location = useLocation();
+
+  // List halaman yang TIDAK BOLEH ada navbar & footer
+  const hideLayout = location.pathname === "/login";
+
   return (
     <>
-    <Navbar/>
+      <ToastContainer />
+
+
+      {!hideLayout && <Navbar />}
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/lapangan" element={<Lapangan />} />
@@ -23,7 +32,9 @@ function App() {
         <Route path="/my-booking" element={<MyBooking/>}/>
         <Route path="/booking/:lapanganId" element={<Booking/>}/>
       </Routes>
-    <Footer/>
+
+      {/* Tampilkan footer kecuali di halaman login */}
+      {!hideLayout && <Footer />}
     </>
   );
 }

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate, useLocation } from "react-router-dom";
 import { assets } from "../assets/assets"; // ← pastikan logo ada di sini
+import { AppContext } from "../context/AppContext";
+import { useContext } from "react";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const token = true;
+  const {token, setToken, userData} = useContext(AppContext)
   const [showMenu, setShowMenu] = useState(false)
 
   const shouldHaveBg = () => {
@@ -44,6 +46,12 @@ const Navbar = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const logout = () => {
+    setToken(false);
+    localStorage.removeItem('token')
+    navigate("/")
+  }
 
   return (
     <header
@@ -94,7 +102,7 @@ const Navbar = () => {
 
           {/* === BUTTON MASUK === */}
           <div className="flex items-center gap-4">
-            {token ? (
+            {token && userData ? (
               <div className="flex items-center gap-2 cursor-pointer group relative">
                 <img
                   className="w-8 h-8 rounded-full"
@@ -117,7 +125,7 @@ const Navbar = () => {
                       Jadwal Saya
                     </p>
                     <p
-                      // onClick={logout}
+                      onClick={logout}
                       className="cursor-pointer text-red-700 hover:bg-red-50 rounded-lg px-4 py-2"
                     >
                       Keluar

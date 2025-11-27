@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { lapangan } from "../assets/assets";
+import { AppContext } from "../context/AppContext";
 
 const TopLapangan = () => {
   const navigate = useNavigate();
+  const {lapangan} = useContext(AppContext)
 
   const top4 = lapangan.slice(0, 3);
 
