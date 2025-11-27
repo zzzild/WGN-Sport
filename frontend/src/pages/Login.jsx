@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useContext } from "react";
-import NavbarItem from "../components/Navbar-item"
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import { assets } from "../assets/assets";
 
 const Login = () => {
   const navigate = useNavigate();
   const { token, registUser, loginUser } = useContext(AppContext);
 
-  const [state, setState] = useState("Sign Up");
+  const [state, setState] = useState("Login");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,169 +16,200 @@ const Login = () => {
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
 
-  const onSubmiteHandler = async (event) => {
-    event.preventDefault();
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
 
-    if (state === "Sign up") {
-      await registUser({
-        email,
-        password,
-        name,
-        telp,
-        gender,
-        address,
-      });
+    if (state === "Sign Up") {
+      await registUser({ email, password, name, telp, gender, address });
     } else {
-      await loginUser({
-        email,
-        password,
-      });
+      await loginUser({ email, password });
     }
   };
 
   useEffect(() => {
-    if (token) {
-      navigate("/");
-    }
+    if (token) navigate("/");
   }, [token]);
 
   return (
-    <>
-      <div className="flex pt-28 flex-col max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 text-gray-800">
+    <div className="w-full min-h-screen flex bg-white">
+      {/* LEFT SIDE (IMAGE + TEXT + CURVE) */}
+    <div
+  className="hidden lg:flex flex-col justify-center px-14 text-white relative w-[55%] bg-cover bg-center"
+  style={{ backgroundImage: `url(${assets.background_img})` }}
+>
+
+  {/* OVERLAY BIAR TEKS LEBIH KELIATAN (opsional) */}
+  <div className="absolute inset-0 bg-black/60"></div>
+
+  <div className="relative z-10">
+    {/* LOGO */}
+    <div className="mb-10">
+      <img 
+        src={assets.logoNoBg} // ganti sesuai logo
+        alt="WGN Sport Logo"
+        className="w-20 opacity-90"
+      />
+    </div>
+
+    {/* HEADLINE */}
+    <h1 className="text-5xl font-extrabold leading-[1.1] mb-4 tracking-tight drop-shadow-[0_2px_6px_rgba(0,0,0,0.4)]">
+  Selamat datang di <span className="text-teal-600">WGN Sport</span>
+</h1>
+
+<h2 className="text-lg font-semibold mb-6 opacity-90 tracking-wider uppercase">
+  Booking Lapangan Badminton Jadi Lebih Mudah
+</h2>
+
+<p className="text-xs opacity-90 max-w-sm leading-relaxed font-light">
+  Temukan lapangan terbaik, atur jadwalmu, dan nikmati pengalaman bermain 
+  yang lebih cepat, seamless, dan modern. Semua dalam satu platform yang 
+  dirancang khusus untuk pemain seperti kamu.
+</p>
+
+<button
+  className="mt-10 bg-white/25 backdrop-blur-xl border border-white/40 
+  px-7 py-2.5 rounded-full text-sm font-medium tracking-wide hover:bg-white/35 
+  hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 shadow-[0_0_10px_rgba(255,255,255,0.15)]"
+  onClick={() => navigate('/')}
+
+>
+  Explore Courts
+</button>
+  </div>
+
+</div>
+
+
+      {/* RIGHT SIDE FORM */}
+      <div className="flex w-full lg:w-[45%] justify-center items-center px-6">
         <form
-          onSubmit={onSubmiteHandler}
-          className="min-h-[80vh] flex items-center justify-center"
+          onSubmit={onSubmitHandler}
+          className="w-full max-w-sm flex flex-col gap-4"
         >
-          <div className="flex flex-col gap-4 m-auto items-start p-8 min-w-[340px] sm:min-w-[420px] border rounded-xl text-zinc-600 text-sm shadow-lg bg-white">
-            <p className="text-2xl font-semibold text-gray-800">
-              {state === "Sign Up" ? "Buat Akun" : "Masuk"}
-            </p>
-            <p className="text-gray-500">
-              Silahkan {state === "Sign Up" ? "Buat akun" : "Masuk"} untuk
-              melakukan booking
-            </p>
+          {/* TITLE */}
+          <h1 className="text-3xl font-bold text-gray-900">
+            {state === "Login" ? "Masuk" : "Buat akun"}
+          </h1>
 
-            {state === "Sign Up" && (
-              <>
-                {/* Nama */}
-                <div className="w-full">
-                  <p>Nama Lengkap</p>
+          {/* LOGIN */}
+          {state === "Login" && (
+            <>
+              <div>
+                <p className="font-medium">Email</p>
+                <input
+                  type="email"
+                  required
+                  className="border rounded-md w-full p-2 mt-1"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <p className="font-medium">Password</p>
+                <input
+                  type="password"
+                  required
+                  className="border rounded-md w-full p-2 mt-1"
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+            </>
+          )}
+
+          {/* SIGN UP */}
+          {state === "Sign Up" && (
+            <>
+              <div>
+                <p className="font-medium">Nama Lengkap</p>
+                <input
+                  type="text"
+                  required
+                  className="border rounded-md w-full p-2 mt-1"
+                  placeholder="Masukkan nama lengkap"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <p className="font-medium">Email</p>
+                <input
+                required
+                  type="email"
+                  className="border rounded-md w-full p-2 mt-1"
+                  placeholder="email@gmail.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+
+              <div>
+                <p className="font-medium">Password</p>
+                <input
+                required
+                  type="password"
+                  className="border rounded-md w-full p-2 mt-1"
+                  placeholder="Minimal 6 karakter"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <p className="font-medium">No. Telepon</p>
                   <input
-                    className="border border-zinc-300 rounded w-full p-2 mt-1"
+                  required
                     type="text"
-                    placeholder="Masukkan nama lengkap"
-                    onChange={(e) => setName(e.target.value)}
-                    value={name}
+                    className="border rounded-md w-full p-2 mt-1"
+                    placeholder="0812345678"
+                    value={telp}
+                    onChange={(e) => setTelp(e.target.value)}
                   />
                 </div>
 
-                {/* Email */}
-                <div className="w-full">
-                  <p>Email</p>
-                  <input
-                    className="border border-zinc-300 rounded w-full p-2 mt-1"
-                    type="email"
-                    placeholder="contoh: email@gmail.com"
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
-                  />
+                <div>
+                  <p className="font-medium">Jenis Kelamin</p>
+                  <select
+                  required
+                    className="border rounded-md w-full p-2 mt-1"
+                    value={gender}
+                    onChange={(e) => setGender(e.target.value)}
+                  >
+                    <option value="">Pilih</option>
+                    <option value="Laki-laki">Laki-laki</option>
+                    <option value="Perempuan">Perempuan</option>
+                  </select>
                 </div>
+              </div>
 
-                {/* Password */}
-                <div className="w-full">
-                  <p>Password</p>
-                  <input
-                    className="border border-zinc-300 rounded w-full p-2 mt-1"
-                    type="password"
-                    placeholder="Minimal 6 karakter"
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
-                  />
-                </div>
+              <div>
+                <p className="font-medium">Alamat</p>
+                <textarea
+                required
+                  className="border rounded-md w-full p-2 mt-1"
+                  placeholder="Masukkan alamat"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                />
+              </div>
+            </>
+          )}
 
-                {/* Telp + Gender */}
-                <div className="flex flex-col sm:flex-row w-full gap-4">
-                  <div className="w-full sm:w-1/2">
-                    <p>No. Telepon</p>
-                    <input
-                      className="border border-zinc-300 rounded w-full p-2 mt-1"
-                      type="tel"
-                      placeholder="081234567890"
-                      onChange={(e) => setTelp(e.target.value)}
-                      value={telp}
-                    />
-                  </div>
+          {/* BUTTON */}
+          <button className="bg-teal-600 text-white py-2 rounded-md mt-3">
+            {state === "Login" ? "Sign in" : "Daftar"}
+          </button>
 
-                  <div className="w-full sm:w-1/2">
-                    <p>Jenis Kelamin</p>
-                    <select
-                      className="border border-zinc-300 rounded w-full p-2 mt-1 bg-white"
-                      onChange={(e) => setGender(e.target.value)}
-                      value={gender}
-                    >
-                      <option value="">Pilih jenis kelamin</option>
-                      <option value="Laki-laki">Laki-laki</option>
-                      <option value="Perempuan">Perempuan</option>
-                    </select>
-                  </div>
-                </div>
 
-                {/* Alamat */}
-                <div className="w-full">
-                  <p>Alamat</p>
-                  <textarea
-                    className="border border-zinc-300 rounded w-full p-2 mt-1 min-h-[60px]"
-                    placeholder="Masukkan alamat lengkap"
-                    onChange={(e) => setAddress(e.target.value)}
-                    value={address}
-                  ></textarea>
-                </div>
-              </>
-            )}
-
-            {state === "Login" && (
+          {/* SWITCH STATE */}
+          <p className="text-sm text-gray-600 text-center mt-3">
+            {state === "Login" ? (
               <>
-                <div className="w-full">
-                  <p>Email</p>
-                  <input
-                    className="border border-zinc-300 rounded w-full p-2 mt-1"
-                    type="email"
-                    onChange={(e) => setEmail(e.target.value)}
-                    value={email}
-                  />
-                </div>
-
-                <div className="w-full">
-                  <p>Password</p>
-                  <input
-                    className="border border-zinc-300 rounded w-full p-2 mt-1"
-                    type="password"
-                    onChange={(e) => setPassword(e.target.value)}
-                    value={password}
-                  />
-                </div>
-              </>
-            )}
-
-            <button
-              type="submit"
-              className="bg-teal-600 text-white w-full py-2 rounded-md text-base font-medium hover:bg-teal-700 transition"
-            >
-              {state === "Sign Up" ? "Daftar" : "Masuk"}
-            </button>
-
-            {state === "Sign Up" ? (
-              <p className="text-gray-600 text-sm">
-                Sudah punya akun?{" "}
-                <span
-                  onClick={() => setState("Login")}
-                  className="text-teal-600 underline cursor-pointer"
-                >
-                  Masuk disini
-                </span>
-              </p>
-            ) : (
-              <p className="text-gray-600 text-sm">
                 Belum punya akun?{" "}
                 <span
                   onClick={() => setState("Sign Up")}
@@ -186,12 +217,22 @@ const Login = () => {
                 >
                   Daftar disini
                 </span>
-              </p>
+              </>
+            ) : (
+              <>
+                Sudah punya akun?{" "}
+                <span
+                  onClick={() => setState("Login")}
+                  className="text-teal-600 underline cursor-pointer"
+                >
+                  Masuk disini
+                </span>
+              </>
             )}
-          </div>
+          </p>
         </form>
       </div>
-    </>
+    </div>
   );
 };
 
