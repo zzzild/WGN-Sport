@@ -22,113 +22,38 @@ const TopLapangan = () => {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-5 w-full">
         {top4.map((item) => (
-          <a
-            key={item.id}
-            href="#"
-            className="block rounded-lg p-4 shadow-xs shadow-indigo-100 transition-all duration-300 hover:-translate-y-2 cursor-pointer
-             hover:shadow-lg"
-          >
-            <img
-              alt=""
-              src={item.image}
-              className="h-56 w-full rounded-md object-cover"
-            />
+         <article
+  key={item.id}
+  onClick={() => navigate(`/lapangan/${item.id}`)}
+  className="overflow-hidden rounded-xl bg-white shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 cursor-pointer"
+>
+  {/* IMAGE */}
+  <img
+    alt={item.name}
+    src={item.image}
+    className="h-56 w-full object-cover"
+  />
 
-            <div className="mt-2">
-              <dl>
-                <div>
-                  <dt className="sr-only">Price</dt>
-                  <dd className="text-sm text-gray-500">{item.price}</dd>
-                </div>
+  {/* CONTENT */}
+  <div className="p-4 sm:p-5">
+    {/* NAME */}
+    <h3 className="text-lg font-semibold text-gray-900">{item.name}</h3>
 
-                <div>
-                  <dt className="sr-only">Address</dt>
-                  <dd className="font-medium">{item.name}</dd>
-                </div>
-              </dl>
+    {/* MINI DIVIDER */}
+    <div className="w-10 h-[3px] bg-teal-400 rounded-full mt-2 mb-3"></div>
 
-              <div className="mt-6 flex items-center gap-12 text-xs">
-                {/* 1. Parking */}
-                <div className="mt-6 flex items-center justify-between gap-4 text-xs">
-                  {/* Parkir */}
-                  <div className="inline-flex shrink-0 items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.8"
-                      stroke="currentColor"
-                      className="size-4 text-teal-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 10h18M3 6h18M5 6v12m14-12v12M8 6v12m8-12v12M12 14.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"
-                      />
-                    </svg>
-                    <p className="text-gray-500">Parkir</p>
-                  </div>
+    {/* SHORT DESCRIPTION */}
+    <p className="text-sm text-gray-500 line-clamp-2">
+      Lapangan nyaman dengan fasilitas lengkap untuk bermain badminton kapan saja.
+    </p>
 
-                  {/* Toilet */}
-                  <div className="inline-flex shrink-0 items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.8"
-                      stroke="currentColor"
-                      className="size-4 text-teal-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM20 6a3 3 0 11-6 0 3 3 0 016 0zM8 21v-6a3 3 0 00-6 0v6M22 21v-6a3 3 0 00-6 0v6"
-                      />
-                    </svg>
-                    <p className="text-gray-500">Toilet</p>
-                  </div>
+    {/* PRICE ON BOTTOM */}
+    <p className="text-sm font-semibold text-gray-500 mt-4">
+      <span className="text-teal-600">Rp {item.price.toLocaleString()}</span> /Jam
+    </p>
+  </div>
+</article>
 
-                  {/* Musholah */}
-                  <div className="inline-flex shrink-0 items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.8"
-                      stroke="currentColor"
-                      className="size-4 text-teal-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 3l6 4.5V21H6V7.5L12 3z"
-                      />
-                    </svg>
-                    <p className="text-gray-500">Musholah</p>
-                  </div>
-
-                  {/* Kantin */}
-                  <div className="inline-flex shrink-0 items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.8"
-                      stroke="currentColor"
-                      className="size-4 text-teal-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 8h18M3 8l1.8 12.6A2 2 0 006.8 22h10.4a2 2 0 002-1.4L21 8M3 8h18M14 3h-4v2h4V3z"
-                      />
-                    </svg>
-                    <p className="text-gray-500">Kantin</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </a>
         ))}
       </div>
 

@@ -31,30 +31,27 @@ export const assets = {
 
 export const fasilitasData = [
   {
-    img: assets.musolah_img,
+    icon: "mushola",
     title: "Mushola",
     desc: "Disediakan mushola yang bersih dan nyaman agar pengunjung tetap dapat beribadah dengan tenang.",
-    date: "21 Jan 2025"
   },
   {
-    img: assets.parkir_img,
+    icon: "parkiran",
     title: "Parkiran",
     desc: "Area parkir luas dan aman untuk kendaraan motor maupun mobil pengunjung.",
-    date: "21 Jan 2025"
   },
   {
-    img: assets.toilet_img,
+    icon: "toilet",
     title: "Toilet",
     desc: "Toilet bersih dan terawat agar pengunjung merasa nyaman selama berada di area lapangan.",
-    date: "21 Jan 2025"
   },
   {
-    img: assets.kantin_img,
+    icon: "kantin",
     title: "Kantin",
     desc: "Tersedia kantin dengan berbagai pilihan makanan dan minuman untuk menemani waktu istirahat.",
-    date: "21 Jan 2025"
   },
-]
+];
+
 
 export const lapangan = [
     {

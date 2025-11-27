@@ -1,17 +1,15 @@
 import React from "react";
 import { assets } from "../assets/assets";
-import { useNavigate }  from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useContext } from "react";
 import { AppContext } from "../context/AppContext";
 import { useEffect } from "react";
 
 const ListLapangan = () => {
   const navigate = useNavigate();
-  const {lapangan} = useContext(AppContext);
+  const { lapangan } = useContext(AppContext);
 
-  useEffect(() => {
-
-  }, [lapangan])
+  useEffect(() => {}, [lapangan]);
 
   return (
     <div className="w-full">
@@ -48,113 +46,88 @@ const ListLapangan = () => {
         </p>
 
         {/* GRID LAPANGAN */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-5 w-full">
+        <div className="grid grid-cols-1 gap-6 pt-5 w-full">
           {lapangan.map((item) => (
-            <div
+            <article
+              key={item.id}
               onClick={() => navigate(`/booking/${item.id}`)}
-              key={item.index}
-              href="#"
-              className="block rounded-lg p-4 bg-white shadow-xs shadow-indigo-100 transition-all duration-300 hover:-translate-y-2 cursor-pointer hover:shadow-lg"
+              className="flex bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100"
             >
-              <img
-                alt={item.name}
-                src={item.image}
-                className="h-56 w-full rounded-md object-cover"
-              />
-
-              <div className="mt-2">
-                <dl>
-                  <div>
-                    <dt className="sr-only">Name</dt>
-                    <dd className="font-medium">{item.name}</dd>
-                  </div>
-                  <div>
-                    <dt className="sr-only">Price</dt>
-                    <dd className="text-sm text-gray-500">{item.price}</dd>
-                  </div>
-
-                </dl>
-
-                {/* Fasilitas */}
-                <div className="mt-6 flex flex-wrap items-center justify-between gap-4 text-xs">
-                  {/* Parkir */}
-                  <div className="inline-flex items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.8"
-                      stroke="currentColor"
-                      className="size-4 text-teal-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 10h18M3 6h18M5 6v12m14-12v12M8 6v12m8-12v12M12 14.5a2.5 2.5 0 110-5 2.5 2.5 0 010 5z"
-                      />
-                    </svg>
-                    <p className="text-gray-500">Parkir</p>
-                  </div>
-
-                  {/* Toilet */}
-                  <div className="inline-flex items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.8"
-                      stroke="currentColor"
-                      className="size-4 text-teal-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM20 6a3 3 0 11-6 0 3 3 0 016 0zM8 21v-6a3 3 0 00-6 0v6M22 21v-6a3 3 0 00-6 0v6"
-                      />
-                    </svg>
-                    <p className="text-gray-500">Toilet</p>
-                  </div>
-
-                  {/* Musholah */}
-                  <div className="inline-flex items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.8"
-                      stroke="currentColor"
-                      className="size-4 text-teal-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M12 3l6 4.5V21H6V7.5L12 3z"
-                      />
-                    </svg>
-                    <p className="text-gray-500">Musholah</p>
-                  </div>
-
-                  {/* Kantin */}
-                  <div className="inline-flex items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth="1.8"
-                      stroke="currentColor"
-                      className="size-4 text-teal-400"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M3 8h18M3 8l1.8 12.6A2 2 0 006.8 22h10.4a2 2 0 002-1.4L21 8M14 3h-4v2h4V3z"
-                      />
-                    </svg>
-                    <p className="text-gray-500">Kantin</p>
-                  </div>
+              {/* BADGE VERTICAL */}
+              <div className="rotate-180 p-3 [writing-mode:vertical-lr]">
+                <div
+                  className={`flex items-center justify-between gap-4 text-[10px] font-bold uppercase
+            ${item.available ? "text-teal-600" : "text-red-600"}
+          `}
+                >
+                  <span>{item.available ? "AVAILABLE" : "BOOKED"}</span>
+                  <span className="w-px flex-1 bg-gray-300"></span>
+                  <span className="opacity-60">WGN</span>
                 </div>
               </div>
-            </div>
+
+              {/* IMAGE */}
+              <div className="hidden sm:block sm:basis-56">
+                <img
+                  alt={item.name}
+                  src={item.image}
+                  className="aspect-square h-full w-full object-cover"
+                />
+              </div>
+
+              {/* CONTENT */}
+              <div className="flex flex-1 flex-col justify-between">
+                <div className="border-s border-gray-200 p-4 sm:border-l-transparent sm:p-6">
+                  {/* NAMA */}
+                  <h3 className="font-bold text-lg text-gray-900">
+                    {item.name}
+                  </h3>
+
+                  {/* HARGA */}
+                  <p className="mt-1 text-sm text-gray-600">
+                    Harga mulai dari{" "}
+                    <span className="font-semibold text-teal-600">
+                      Rp {item.price.toLocaleString()}
+                    </span>{" "}
+                    / jam.
+                  </p>
+
+                  {/* MINI DIVIDER */}
+                  <div className="mt-4 w-14 h-[3px] bg-teal-500 rounded-full"></div>
+
+                  {/* LUAS LAPANGAN */}
+                  <p className="mt-3 text-sm text-gray-700">
+                    Luas lapangan:{" "}
+                    <span className="font-medium text-gray-900">
+                      {item.size || "13m × 6m"}
+                    </span>
+                  </p>
+
+                  {/* HIGHLIGHT */}
+                  <ul className="mt-3 text-sm text-gray-600 flex flex-wrap gap-4">
+                    <li className="flex items-center gap-1">
+                      ✔ <span>Penerangan terang</span>
+                    </li>
+                    <li className="flex items-center gap-1">
+                      ✔ <span>Lantai anti-slip</span>
+                    </li>
+                    <li className="flex items-center gap-1">
+                      ✔ <span>Kondisi bersih</span>
+                    </li>
+                  </ul>
+                </div>
+
+                {/* CTA BUTTON */}
+                <div className="sm:flex sm:items-end sm:justify-end">
+                  <button
+                    className="block bg-teal-500 px-6 py-3 text-center text-xs font-bold text-white uppercase 
+                       transition hover:bg-teal-600"
+                  >
+                    Booking Sekarang
+                  </button>
+                </div>
+              </div>
+            </article>
           ))}
         </div>
       </div>
