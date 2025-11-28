@@ -18,6 +18,8 @@ import profile_pic from './profile_pic.png'
 import dropdown_icon from './dropdown_icon.svg'
 import cross_icon from './cross_icon.png'
 import menu_icon from './menu_icon.svg'
+import badmin1 from './badmin1.jpg'
+import badmin2 from './badmin2.jpg'
 
 
 export const assets = {
@@ -26,7 +28,7 @@ export const assets = {
     kantin_img, place_img, logoNoBg, lapangan1_img,
     lapangan2_img, lapangan3_img, lapangan4_img, lapangan5_img,
     lapangan6_img, lapangan7_img, profile_pic, dropdown_icon,
-    cross_icon, menu_icon
+    cross_icon, menu_icon, badmin1, badmin2
 }
 
 export const fasilitasData = [

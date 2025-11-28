@@ -51,7 +51,7 @@ const ListLapangan = () => {
             <article
               key={item.id}
               onClick={() => navigate(`/booking/${item.id}`)}
-              className="flex bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 cursor-pointer border border-gray-100"
+              className="flex bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
             >
               {/* BADGE VERTICAL */}
               <div className="rotate-180 p-3 [writing-mode:vertical-lr]">
@@ -121,7 +121,7 @@ const ListLapangan = () => {
                 <div className="sm:flex sm:items-end sm:justify-end">
                   <button
                     className="block bg-teal-500 px-6 py-3 text-center text-xs font-bold text-white uppercase 
-                       transition hover:bg-teal-600"
+                       transition hover:bg-teal-600 cursor-pointer"
                   >
                     Booking Sekarang
                   </button>

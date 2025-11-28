@@ -16,30 +16,29 @@ const Tentang = () => {
             Tentang Kami — <span className="text-teal-400">WGN Sport</span>
           </h2>
           <p className="text-xs md:text-sm text-gray-200 font-light">
-            Temukan siapa kami dan misi kami dalam menghadirkan pengalaman olahraga terbaik
+            Temukan siapa kami dan misi kami dalam menghadirkan pengalaman
+            olahraga terbaik
           </p>
         </div>
       </div>
 
       {/* CONTENT SECTION */}
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 gap-4 py-16 bg-white text-gray-700">
-
         {/* === TITLE & INTRO (LEFT ALIGNED) === */}
         <div className="mb-10">
           <h1 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-3">
             WGN Sport
           </h1>
-          <p className="text-sm text-gray-500 mb-2">
-            Apa itu WGN Sport?
-          </p>
+          <p className="text-sm text-gray-500 mb-2">Apa itu WGN Sport?</p>
           <p className="sm:w-2/3 text-sm text-gray-600 leading-relaxed">
-            WGN Sport adalah platform pemesanan lapangan badminton yang dibuat untuk
-            memudahkan kamu dalam mencari dan menyewa lapangan dengan cepat, praktis, dan nyaman.
+            WGN Sport adalah platform pemesanan lapangan badminton yang dibuat
+            untuk memududahkan kamu dalam mencari dan menyewa lapangan dengan
+            cepat, praktis, dan nyaman.
             <br /> <br />
             Kami hadir untuk memberikan pengalaman bermain badminton yang lebih
             modern dan efisien. Tanpa perlu datang langsung ke lokasi, kamu bisa
-            mengecek ketersediaan jadwal, memilih lapangan, dan melakukan booking
-            hanya melalui satu platform.
+            mengecek ketersediaan jadwal, memilih lapangan, dan melakukan
+            booking hanya melalui satu platform.
           </p>
         </div>
 
@@ -54,45 +53,82 @@ const Tentang = () => {
           <div className="flex flex-col justify-center gap-5 md:w-2/4 text-[15px] leading-relaxed text-gray-600 text-justify">
             <b className="text-gray-800 text-base">Visi Kami</b>
             <p>
-              Menjadi layanan penyewaan lapangan olahraga yang praktis, terjangkau,
-              dan dapat diandalkan. Kami ingin memastikan setiap pemain—baik pemula
-              maupun profesional—bisa menikmati fasilitas terbaik tanpa ribet.
+              Menjadi layanan penyewaan lapangan olahraga yang praktis,
+              terjangkau, dan dapat diandalkan. Kami ingin memastikan setiap
+              pemain—baik pemula maupun profesional—bisa menikmati fasilitas
+              terbaik tanpa ribet.
             </p>
             <p>
-              Kami percaya olahraga bukan hanya tentang kompetisi, tapi juga tentang
-              kebersamaan dan gaya hidup sehat. Dengan teknologi yang kami kembangkan,
-              kami berkomitmen untuk membuat pengalaman olahraga menjadi lebih mudah diakses
-              oleh siapa pun, kapan pun.
+              Kami percaya olahraga bukan hanya tentang kompetisi, tapi juga
+              tentang kebersamaan dan gaya hidup sehat. Dengan teknologi yang
+              kami kembangkan, kami berkomitmen untuk membuat pengalaman
+              olahraga menjadi lebih mudah diakses oleh siapa pun, kapan pun.
             </p>
           </div>
         </div>
 
-        {/* === WHY CHOOSE US === */}
-        <div className="text-left mb-12">
-          <h3 className="text-2xl font-semibold text-gray-800 mb-1">
-            Kenapa <span className="text-teal-500">Memilih Kami</span>
+        {/* === CONTACT & LOCATION === */}
+        <div className="mt-10 pb-16">
+          <h3 className="text-2xl font-semibold text-gray-800 mb-2">
+            Lokasi & Kontak
           </h3>
-          <p className="text-xs text-gray-500">
-            Alasan mengapa pengguna mempercayai WGN Sport sebagai platform penyewaan lapangan terbaik
+          <p className="text-xs text-gray-500 mb-6">
+            Informasi lokasi dan kontak resmi WGN Sport Center
           </p>
-        </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4 pb-10">
-          {[
-            { title: "Mudah & Cepat", desc: "Booking lapangan bisa dilakukan kapan saja hanya dalam hitungan detik." },
-            { title: "Transparan", desc: "Informasi jadwal dan harga ditampilkan jelas tanpa biaya tersembunyi." },
-            { title: "Fasilitas Nyaman", desc: "Lapangan terawat dengan fasilitas pendukung yang nyaman dan bersih." },
-            { title: "Pembayaran Aman", desc: "Tersedia berbagai metode pembayaran yang aman dan terpercaya." },
-            { title: "Customer Support", desc: "Tim support kami siap membantu jika kamu mengalami kendala saat pemesanan." }
-          ].map((item, index) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+            {/* ADDRESS CARD */}
             <div
-              key={index}
-              className="border rounded-xl px-6 py-8 sm:py-10 flex flex-col gap-4 text-[15px] hover:bg-teal-500 hover:text-white transition-all duration-300 text-gray-600 cursor-pointer shadow-sm"
+              className="bg-white border rounded-xl p-6 shadow-sm transition-all duration-300
+                hover:bg-teal-500 group hover:border-none"
             >
-              <b className="text-base">{item.title}</b>
-              <p className="leading-relaxed">{item.desc}</p>
+              <h4 className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-white">
+                Alamat
+              </h4>
+
+              <p className="text-sm text-gray-600 leading-relaxed group-hover:text-white">
+                WGN Sport Center
+                <br />
+                62, RT.001/RW.015, Kota Baru,
+                <br />
+                Kec. Bekasi Barat, Kota Bekasi,
+                <br />
+                Jawa Barat 17133
+              </p>
+
+              <a
+                href="https://maps.app.goo.gl/zgCqHvsJFTQMqWy46"
+                target="_blank"
+                className="inline-block mt-4 text-teal-500 text-sm font-medium
+               group-hover:text-white"
+              >
+                Lihat di Google Maps →
+              </a>
             </div>
-          ))}
+
+            {/* CONTACT CARD */}
+            <div
+              className="bg-white border rounded-xl p-6 shadow-sm transition-all duration-300
+                hover:bg-teal-500 group hover:border-none"
+            >
+              <h4 className="text-lg font-semibold text-gray-800 mb-2 group-hover:text-white">
+                Kontak
+              </h4>
+
+              <p className="text-sm text-gray-600 leading-relaxed group-hover:text-white">
+                Nomor Telepon / WhatsApp:
+              </p>
+
+              <a
+                href="https://wa.me/6280000000000"
+                target="_blank"
+                className="inline-block mt-2 text-teal-500 text-sm font-medium
+               group-hover:text-white"
+              >
+                +62 812 9166 4420 - +62 8788 2490 6179
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </div>

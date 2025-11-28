@@ -1,4 +1,5 @@
 import React from "react";
+import { assets } from "../assets/assets";
 
 const Cta = () => {
   return (
@@ -36,11 +37,11 @@ const Cta = () => {
 
           <div className="grid grid-cols-2 gap-4 md:grid-cols-1 lg:grid-cols-2">
             <img
-              src="https://images.unsplash.com/photo-1621274790572-7c32596bc67f?auto=format&fit=crop&q=80&w=1160"
+              src={assets.badmin1}
               className="h-40 w-full object-cover sm:h-56 md:h-full"
             />
             <img
-              src="https://images.unsplash.com/photo-1567168544813-cc03465b4fa8?auto=format&fit=crop&q=80&w=1160"
+              src={assets.badmin2}
               className="h-40 w-full object-cover sm:h-56 md:h-full"
             />
           </div>
