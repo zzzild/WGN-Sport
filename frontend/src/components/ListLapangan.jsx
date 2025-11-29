@@ -47,10 +47,10 @@ const ListLapangan = () => {
 
         {/* GRID LAPANGAN */}
         <div className="grid grid-cols-1 gap-6 pt-5 w-full">
-          {lapangan.map((item) => (
+          {lapangan.map((item, index) => (
             <article
-              key={item.id}
-              onClick={() => navigate(`/booking/${item.id}`)}
+              key={index}
+              
               className="flex bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100"
             >
               {/* BADGE VERTICAL */}
@@ -121,7 +121,7 @@ const ListLapangan = () => {
                 <div className="sm:flex sm:items-end sm:justify-end">
                   <button
                     className="block bg-teal-500 px-6 py-3 text-center text-xs font-bold text-white uppercase 
-                       transition hover:bg-teal-600 cursor-pointer"
+                       transition hover:bg-teal-600 cursor-pointer" onClick={() => navigate(`/booking/${item.lapanganId}`)}
                   >
                     Booking Sekarang
                   </button>

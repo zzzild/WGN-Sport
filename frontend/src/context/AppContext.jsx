@@ -2,6 +2,7 @@ import React, { createContext, useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
+import { useParams } from "react-router-dom";
 
 export const AppContext = createContext();
 
@@ -12,6 +13,18 @@ const AppContextProvider = (props) => {
     localStorage.getItem("token") ? localStorage.getItem("token") : false
   );
   const [userData, setUserData] = useState(false);
+  const [lapanganInfo, setLapanganInfo] = useState(null)
+  const [lapanganSlot, setLapanganSlot] = useState([])
+  const [slotIndex, setSlotIndex] = useState("")
+  const daysOfWeek = [
+    "Minggu",
+    "Senin",
+    "Selasa",
+    "Rabu",
+    "Kamis",
+    "Jumat",
+    "Sabtu",
+  ]
 
   const getLapanganData = async () => {
     try {
@@ -87,6 +100,12 @@ const AppContextProvider = (props) => {
       console.log(error);
       toast.error("Terjadi kesalahan saat login");
     }
+  };
+
+  const fetchLapanganInfo = (id) => {
+    const info = lapangan.find((doc) => doc.lapanganId === id)
+    setLapanganInfo(info)
+    console.log(info)
   }
 
   const value = {
@@ -99,7 +118,8 @@ const AppContextProvider = (props) => {
     userData,
     setUserData,
     loadProfileUserData,
-    registerUser, loginUser
+    registerUser, loginUser,
+    fetchLapanganInfo, lapanganInfo
   };
 
   useEffect(() => {

@@ -1,8 +1,11 @@
 import React from "react";
 import { assets } from "../assets/assets";
 import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
 
 const Header = () => {
+  const navigate = useNavigate();
+
   return (
     <div
       className="relative w-full h-[100vh] bg-cover bg-center flex items-center justify-center text-center px-6"
@@ -31,7 +34,11 @@ const Header = () => {
             text-white font-medium
             hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 shadow-[0_0_10px_rgba(255,255,255,0.15)
             transition-all duration-300 cursor-pointer
-          "
+            "
+            onClick={() => {
+              navigate("/lapangan");
+              scrollTo(0, 0);
+            }}
         >
           Booking Sekarang ❯❯
           

@@ -12,18 +12,16 @@ const Navbar = () => {
   const [showMenu, setShowMenu] = useState(false)
 
   const shouldHaveBg = () => {
-  // exact match
-  const exactMatch = [
-    "/login",
-    "/my-profile",
-    "/my-booking"
-  ];
+  const exactMatch = ["/login", "/my-profile", "/my-booking"];
 
   if (exactMatch.includes(location.pathname)) return true;
 
+  // untuk dynamic route booking
+  if (location.pathname.startsWith("/booking/")) return true;
 
   return false;
 };
+
 
 
 

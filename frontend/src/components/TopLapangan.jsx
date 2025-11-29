@@ -22,10 +22,10 @@ const TopLapangan = () => {
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-5 w-full">
-        {top4.map((item) => (
+        {top4.map((item, index) => (
           <article
-            key={item.id}
-            onClick={() => navigate(`/lapangan/${item.id}`)}
+            key={index}
+            onClick={() => (navigate(`/booking/${item.lapanganId}`), window.scrollTo(0, 0))}
             className="overflow-hidden rounded-xl bg-white shadow-sm transition-all hover:shadow-lg hover:-translate-y-1 cursor-pointer"
           >
             {/* IMAGE */}

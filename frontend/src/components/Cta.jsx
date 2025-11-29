@@ -1,7 +1,10 @@
 import React from "react";
 import { assets } from "../assets/assets";
+import { useNavigate } from "react-router-dom";
 
 const Cta = () => {
+  const navigate = useNavigate();
+
   return (
     <div>
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
@@ -26,6 +29,10 @@ const Cta = () => {
               <div className="mt-4 md:mt-8">
                 <button
                   href="#"
+                   onClick={() => {
+              navigate("/tentang");
+              scrollTo(0, 0);
+            }}
                   className="inline-block rounded-sm border bg-teal-600 px-12 py-3 text-sm font-medium text-white  hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 shadow-[0_0_10px_rgba(255,255,255,0.15)
             transition-all duration-300 cursor-pointer "
                 >
