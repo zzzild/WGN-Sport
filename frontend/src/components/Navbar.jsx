@@ -48,7 +48,8 @@ const Navbar = () => {
   const logout = () => {
     setToken(false);
     localStorage.removeItem('token')
-    navigate("/")
+    navigate("/") 
+    window.scrollTo(0, 0);
   }
 
   return (
@@ -100,7 +101,7 @@ const Navbar = () => {
 
           {/* === BUTTON MASUK === */}
           <div className="flex items-center gap-4">
-            {token && userData ? (
+            {token  ? (
               <div className="flex items-center gap-2 cursor-pointer group relative">
                 <img
                   className="w-8 h-8 rounded-full"
