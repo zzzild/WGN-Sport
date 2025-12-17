@@ -2,18 +2,13 @@ import React, { useContext, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
 import { toast } from "react-toastify";
-import axios from "axios";
 
 const Booking = () => {
   const { lapanganId } = useParams();
   const navigate = useNavigate();
 
-  const { lapanganInfo, fetchLapanganInfo, backendUrl, token } =
+  const { lapanganInfo, fetchLapanganInfo, lapanganSlots, slotIndex, slotTime, setSlotIndex, setSlotTime, generateSlots, toggleSlotTime, makeBooking} =
     useContext(AppContext);
-
-  const [slotIndex, setSlotIndex] = useState(0);
-  const [slotTimes, setSlotTimes] = useState([]); // ← MULTI SELECT
-  const [lapanganSlots, setLapanganSlots] = useState([]);
 
   const daysOfWeek = [
     "Minggu",
@@ -36,120 +31,9 @@ const Booking = () => {
     fetchLapanganInfo(lapanganId);
   }, [lapanganId]);
 
-  // Generate slot jam
-  const generateSlots = () => {
-    if (!lapanganInfo) return;
-
-    let today = new Date();
-    let slots = [];
-
-    const START_HOUR = 7;
-    const END_HOUR = 23;
-
-    const todayDate = today.getDate();
-
-    for (let i = 0; i < 7; i++) {
-      let currentDate = new Date(today);
-      currentDate.setDate(today.getDate() + i);
-
-      let slotPerDay = [];
-
-      const isToday = currentDate.getDate() === todayDate;
-
-      for (let hour = START_HOUR; hour < END_HOUR; hour++) {
-        // HARI INI & JAM LEWAT → SKIP
-        if (isToday && hour <= today.getHours()) continue;
-
-        const slotTime = `${hour.toString().padStart(2, "0")}:00`;
-
-        const d = currentDate.getDate();
-        const m = currentDate.getMonth() + 1;
-        const y = currentDate.getFullYear();
-        const slotDate = `${d}_${m}_${y}`;
-
-        const isBooked =
-          lapanganInfo.slots_booked?.[slotDate]?.includes(slotTime);
-
-        if (!isBooked) {
-          slotPerDay.push({
-            datetime: new Date(
-              currentDate.getFullYear(),
-              currentDate.getMonth(),
-              currentDate.getDate(),
-              hour,
-              0,
-              0
-            ),
-            time: slotTime,
-          });
-        }
-      }
-
-      slots.push(slotPerDay);
-    }
-
-    setLapanganSlots(slots);
-  };
-
   useEffect(() => {
-    if (lapanganInfo) generateSlots();
+     generateSlots();
   }, [lapanganInfo]);
-
-  // MULTI SELECT (maks 2 jam)
-  const toggleSlotTime = (time) => {
-    if (slotTimes.includes(time)) {
-      setSlotTimes(slotTimes.filter((t) => t !== time));
-      return;
-    }
-
-    if (slotTimes.length >= 2) {
-      toast.error("Kamu hanya bisa memilih maksimal 2 jam.");
-      return;
-    }
-
-    setSlotTimes([...slotTimes, time]);
-  };
-
-  // Proses booking
-  const makeBooking = async () => {
-    if (!token) {
-      toast.warn("Silakan login terlebih dahulu.");
-      return navigate("/login");
-    }
-
-    if (!lapanganSlots[slotIndex] || slotTimes.length === 0) {
-      return toast.error("Pilih minimal 1 jam.");
-    }
-
-    try {
-      const dt = lapanganSlots[slotIndex][0].datetime;
-
-      const d = dt.getDate();
-      const m = dt.getMonth() + 1;
-      const y = dt.getFullYear();
-
-      const slotDate = `${d}_${m}_${y}`;
-
-      const { data } = await axios.post(
-        backendUrl + "/api/lapangan/book",
-        {
-          lapanganId,
-          slotDate,
-          slotTimes, 
-        },
-        { headers: { token } }
-      );
-
-      if (data.success) {
-        toast.success("Booking berhasil!");
-        navigate("/my-booking");
-      } else {
-        toast.error(data.message);
-      }
-    } catch (error) {
-      toast.error("Terjadi kesalahan saat booking.");
-    }
-  };
 
   if (!lapanganInfo) return <p>Loading...</p>;
 
@@ -225,7 +109,7 @@ const Booking = () => {
               key={index}
               onClick={() => {
                 setSlotIndex(index);
-                setSlotTimes([]); // Reset pilihan jam saat pindah hari
+                setSlotTime([]); // Reset pilihan jam saat pindah hari
               }}
               className={`text-center py-6 min-w-20 rounded-2xl cursor-pointer ${
                 slotIndex === index
@@ -251,7 +135,7 @@ const Booking = () => {
                 key={index}
                 onClick={() => toggleSlotTime(item.time)}
                 className={`px-5 py-2 rounded-full cursor-pointer ${
-                  slotTimes.includes(item.time)
+                  slotTime.includes(item.time)
                     ? "bg-teal-500 text-white"
                     : "border border-gray-400"
                 }`}
@@ -264,8 +148,8 @@ const Booking = () => {
 
         {/* BUTTON */}
         <button
-          onClick={makeBooking}
-          className="bg-teal-600 text-white text-sm px-14 py-3 rounded-full my-6"
+          onClick={() => makeBooking(lapanganId, navigate)}
+          className="bg-teal-600 text-white text-sm px-14 py-3 rounded-full my-6 cursor-pointer"
         >
           Booking Sekarang
         </button>

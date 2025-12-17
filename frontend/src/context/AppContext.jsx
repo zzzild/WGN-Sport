@@ -2,7 +2,6 @@ import React, { createContext, useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import { toast } from "react-toastify";
-import { useParams } from "react-router-dom";
 
 export const AppContext = createContext();
 
@@ -13,9 +12,11 @@ const AppContextProvider = (props) => {
     localStorage.getItem("token") ? localStorage.getItem("token") : false
   );
   const [userData, setUserData] = useState(false);
-  const [lapanganInfo, setLapanganInfo] = useState(null)
-  const [lapanganSlot, setLapanganSlot] = useState([])
-  const [slotIndex, setSlotIndex] = useState("")
+  const [lapanganInfo, setLapanganInfo] = useState(null);
+  const [slotIndex, setSlotIndex] = useState(0);
+  const [slotTime, setSlotTime] = useState([]); // ← MULTI SELECT
+  const [lapanganSlots, setLapanganSlots] = useState([]);
+
   const daysOfWeek = [
     "Minggu",
     "Senin",
@@ -24,7 +25,7 @@ const AppContextProvider = (props) => {
     "Kamis",
     "Jumat",
     "Sabtu",
-  ]
+  ];
 
   const getLapanganData = async () => {
     try {
@@ -72,41 +73,169 @@ const AppContextProvider = (props) => {
 
   const registerUser = async (formData) => {
     try {
-      const {data} = await axios.post(backendUrl + '/api/user/register', formData)
-        if (data.success) {
-          localStorage.setItem('token', data.token)
-          setToken(data.token)
-          toast.success('Pendaftaran berhasil. Selamat datang!')
-        } else {
-          toast.error(data.message || 'Pendaftaran gagal, silahkan coba lagi')
-        }
+      const { data } = await axios.post(
+        backendUrl + "/api/user/register",
+        formData
+      );
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        setToken(data.token);
+        toast.success("Pendaftaran berhasil. Selamat datang!");
+      } else {
+        toast.error(data.message || "Pendaftaran gagal, silahkan coba lagi");
+      }
     } catch (error) {
       console.log(error);
       toast.error("Terjadi kesalahan saat regist");
     }
-  }
+  };
 
-  const loginUser = async ({email, password}) => {
+  const loginUser = async ({ email, password }) => {
     try {
-      const {data} = await axios.post(backendUrl + '/api/user/login', {email, password})
-        if (data.success) {
-          localStorage.setItem('token', data.token)
-          setToken(data.token)
-          toast.success('Login berhasil, Selamat datang kembali !!')
-        } else {
-          toast.error(data.message || 'Login gagal, periksa kembali email dan password anda')
-        }
+      const { data } = await axios.post(backendUrl + "/api/user/login", {
+        email,
+        password,
+      });
+      if (data.success) {
+        localStorage.setItem("token", data.token);
+        setToken(data.token);
+        toast.success("Login berhasil, Selamat datang kembali !!");
+      } else {
+        toast.error(
+          data.message || "Login gagal, periksa kembali email dan password anda"
+        );
+      }
     } catch (error) {
       console.log(error);
       toast.error("Terjadi kesalahan saat login");
     }
   };
 
-  const fetchLapanganInfo = (id) => {
-    const info = lapangan.find((doc) => doc.lapanganId === id)
-    setLapanganInfo(info)
-    console.log(info)
-  }
+  const generateSlots = () => {
+    if (!lapanganInfo) return;
+
+    let today = new Date();
+    let slots = [];
+
+    const START_HOUR = 7;
+    const END_HOUR = 23;
+
+    const todayDate = today.getDate();
+
+    for (let i = 0; i < 7; i++) {
+      let currentDate = new Date(today);
+      currentDate.setDate(today.getDate() + i);
+
+      let slotPerDay = [];
+
+      const isToday = currentDate.getDate() === todayDate;
+
+      for (let hour = START_HOUR; hour < END_HOUR; hour++) {
+        // HARI INI & JAM LEWAT → SKIP
+        if (isToday && hour <= today.getHours()) continue;
+
+        const slotTime = `${hour.toString().padStart(2, "0")}:00`;
+
+        const d = currentDate.getDate();
+        const m = currentDate.getMonth() + 1;
+        const y = currentDate.getFullYear();
+        const slotDate = `${d}_${m}_${y}`;
+
+        const isBooked =
+          lapanganInfo.slots_booked?.[slotDate]?.includes(slotTime);
+
+        if (!isBooked) {
+          slotPerDay.push({
+            datetime: new Date(
+              currentDate.getFullYear(),
+              currentDate.getMonth(),
+              currentDate.getDate(),
+              hour,
+              0,
+              0
+            ),
+            time: slotTime,
+          });
+        }
+      }
+
+      slots.push(slotPerDay);
+    }
+
+    setLapanganSlots(slots);
+  };
+
+  const toggleSlotTime = (time) => {
+    if (slotTime.includes(time)) {
+      setSlotTime(slotTime.filter((t) => t !== time));
+      return;
+    }
+
+    if (slotTime.length >= 2) {
+      toast.error("Kamu hanya bisa memilih maksimal 2 jam.");
+      return;
+    }
+
+    setSlotTime([...slotTime, time]);
+  };
+
+  const fetchLapanganInfo = async (id) => {
+    try {
+      const { data } = await axios.get(backendUrl + `/api/lapangan/${id}`);
+
+      if (data.success) {
+        setLapanganInfo(data.lapangan);
+      }
+    } catch {
+      toast.error("Gagal mengambil detail lapangan");
+    }
+  };
+
+  const makeBooking = async (lapanganId, navigate) => {
+    if (!token) {
+      toast.warn("Silakan login terlebih dahulu.");
+      return navigate("/login");
+    }
+
+    if (!lapanganSlots[slotIndex] || slotTime.length === 0) {
+      return toast.error("Pilih minimal 1 jam.");
+    }
+
+    try {
+      const dt = lapanganSlots[slotIndex][0].datetime;
+
+      const d = dt.getDate();
+      const m = dt.getMonth() + 1;
+      const y = dt.getFullYear();
+
+      const slotDate = `${d}_${m}_${y}`;
+
+      const { data } = await axios.post(
+        backendUrl + "/api/user/booking-lapangan",
+        {
+          lapanganId,
+          slotDate,
+          slotTime,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (data.success) {
+        toast.success("Booking berhasil!");
+              await fetchLapanganInfo(lapanganId);
+      setSlotTime([]);
+        navigate("/my-booking");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error) {
+      toast.error("Terjadi kesalahan saat booking.");
+    }
+  };
 
   const value = {
     token,
@@ -118,8 +247,19 @@ const AppContextProvider = (props) => {
     userData,
     setUserData,
     loadProfileUserData,
-    registerUser, loginUser,
-    fetchLapanganInfo, lapanganInfo
+    registerUser,
+    loginUser,
+    fetchLapanganInfo,
+    lapanganInfo,
+    makeBooking,
+    toggleSlotTime,
+    generateSlots,
+    lapanganSlots,
+    setLapanganSlots,
+    slotIndex,
+    setSlotIndex,
+    slotTime,
+    setSlotTime,
   };
 
   useEffect(() => {

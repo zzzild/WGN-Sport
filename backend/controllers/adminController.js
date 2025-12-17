@@ -119,4 +119,29 @@ const allLapangan = async (req, res) => {
   }
 };
 
-export { loginAdmin, registerAdmin, addLapangan, allLapangan };
+const getLapanganById = async (req, res) => {
+  try {
+    const {lapanganId} = req.params;
+
+    const lapangan = await lapanganModel.findOne({lapanganId});
+
+    if (!lapangan) {
+      return res.json({
+        success: false,
+        message: "Lapangan Tidak ditemukan"
+      })
+    }
+
+    res.json({
+      success: true,
+      lapangan
+    })
+  } catch (error) {
+    res.json({
+      success: false,
+      message: error.message
+    })
+  }
+}
+
+export { loginAdmin, registerAdmin, addLapangan, allLapangan, getLapanganById };

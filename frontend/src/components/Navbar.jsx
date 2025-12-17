@@ -82,17 +82,17 @@ const Navbar = () => {
           <nav className="hidden md:block" aria-label="Global">
             <ul className="flex items-center gap-10 text-sm font-medium">
               <li>
-                <NavLink to="/" className={navLinkClass}>
+                <NavLink to="/" className={navLinkClass} onClick={() => window.scrollTo(0, 0)}>
                   Beranda
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/lapangan" className={navLinkClass}>
+                <NavLink to="/lapangan" className={navLinkClass} onClick={() => window.scrollTo(0, 0)}>
                   Lapangan
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/tentang" className={navLinkClass}>
+                <NavLink to="/tentang" className={navLinkClass} onClick={() => window.scrollTo(0, 0)}>
                   Tentang
                 </NavLink>
               </li>
@@ -112,7 +112,7 @@ const Navbar = () => {
                 <div className="absolute w-56 top-0 right-0 pt-14 text-base font-medium text-gray-600 z-20 hidden group-hover:block">
                   <div className=" bg-white shadow-lg divide-y divide-gray-100 rounded flex flex-col gap-4 p-2">
                     <p
-                      onClick={() => navigate("my-profile")}
+                      onClick={() => navigate("my-profile") }
                       className=" cursor-pointer text-gray-500 hover:bg-gray-100 hover:text-gray-700 rounded-lg px-4 py-2"
                     >
                       Profile Saya

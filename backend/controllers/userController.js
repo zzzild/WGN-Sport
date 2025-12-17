@@ -116,11 +116,11 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   try {
-    const { name,  address, gender, phone } = req.body;
+    const { name, address, gender, phone } = req.body;
     const userId = req.userId;
     const imageFile = req.file;
 
-    if (!name ||  !address || !gender || !phone) {
+    if (!name || !address || !gender || !phone) {
       return res.json({ success: false, message: "Missing detail" });
     }
 
@@ -130,22 +130,25 @@ const updateProfile = async (req, res) => {
     }
 
     await userModel.findOneAndUpdate(
-      {userId},
+      { userId },
       {
-        name, phone, address, gender, 
+        name,
+        phone,
+        address,
+        gender,
       }
     );
 
     if (imageFile) {
       const imageUpload = await cloudinary.uploader.upload(imageFile.path, {
-        resource_type: "image"
+        resource_type: "image",
       });
       const imageUrl = imageUpload.secure_url;
 
-      await userModel.findOneAndUpdate({userId}, {image: imageUrl});
+      await userModel.findOneAndUpdate({ userId }, { image: imageUrl });
     }
 
-    res.json({success: true, message: "Profile Updated"});
+    res.json({ success: true, message: "Profile Updated" });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
@@ -154,67 +157,83 @@ const updateProfile = async (req, res) => {
 
 const bookingLapangan = async (req, res) => {
   try {
-    const {lapanganId, slotTime, slotDate} = req.body;
-  const userId = req.userId
+    const { lapanganId, slotTime, slotDate } = req.body;
+    const userId = req.userId;
 
-  const lapanganDataFull = await lapanganModel.findOne({lapanganId}).select("-password")
+    const lapanganDataFull = await lapanganModel
+      .findOne({ lapanganId })
+      .select("-password");
 
-  if (!lapanganDataFull || !lapanganDataFull.available) {
-    return res.json({success: false, message:"Lapangan tidak tersediaa"});
-  }
-
-  let slots_booked = {...lapanganDataFull.slots_booked};
-
-  if (slots_booked[slotDate]) {
-    if (slots_booked[slotDate].includes(slotTime)) {
-      return res.json({success: false, message:"Slot tidak tersedia"})
-    } else {
-      slots_booked[slotDate].push(slotTime);
+    if (!lapanganDataFull || !lapanganDataFull.available) {
+      return res.json({ success: false, message: "Lapangan tidak tersediaa" });
     }
-  } else {
-    slots_booked[slotDate] = [slotTime];
-  }
 
-  const userData = await userModel.findOne({userId}).select("-password");
+    let slots_booked = { ...lapanganDataFull.slots_booked };
 
-  const bookingData = {
-    userId,
-    lapanganId,
-    userData,
-    lapanganData: {
-      name: lapanganDataFull.name,
-      image: lapanganDataFull.image
-    },
-    amount: lapanganDataFull.price,
-    slotTime,
-    slotDate,
-    date: Date.now()
-  };
-  const newBooking = new bookingModel(bookingData);
-  await newBooking.save();
+    if (!slots_booked[slotDate]) {
+      slots_booked[slotDate] = [];
+    }
 
-  await lapanganModel.findOneAndUpdate({lapanganId}, {slots_booked});
+    for (const time of slotTime) {
+      if (slots_booked[slotDate].includes(time)) {
+        return res.json({
+          success: false,
+          message: "Slot tidak tersedia",
+        });
+      }
+    }
 
-  res.json({success:true, message: "Booking berhasil"})
+    slots_booked[slotDate].push(...slotTime);
 
+    const userData = await userModel.findOne({ userId }).select("-password");
+
+    const totalJam = slotTime.length;
+    const totalAmount = lapanganDataFull.price * totalJam;
+
+    const bookingData = {
+      userId,
+      lapanganId,
+      userData,
+      lapanganData: {
+        name: lapanganDataFull.name,
+        image: lapanganDataFull.image,
+      },
+      amount: totalAmount,
+      pricePerHours: lapanganDataFull.price,
+      totalHour: totalJam,
+      slotTime,
+      slotDate,
+      date: Date.now(),
+    };
+    const newBooking = new bookingModel(bookingData);
+    await newBooking.save();
+
+    await lapanganModel.findOneAndUpdate({ lapanganId }, { slots_booked });
+
+    res.json({ success: true, message: "Booking berhasil" });
   } catch (error) {
-    console.log(error)
-    res.json({success:false, message:error.message})
+    console.log(error);
+    res.json({ success: false, message: error.message });
   }
 };
 
 const listBooking = async (req, res) => {
   try {
     const userId = req.userId;
-    const booking = await bookingModel.find({userId})
+    const booking = await bookingModel.find({ userId });
 
-    res.json({success: true, booking})
+    res.json({ success: true, booking });
   } catch (error) {
-    console.log(error)
-    res.json({success:false, message:error.message})
+    console.log(error);
+    res.json({ success: false, message: error.message });
   }
-}
+};
 
-
-
-export { loginUser, registerUser, getProfile, updateProfile, bookingLapangan, listBooking };
+export {
+  loginUser,
+  registerUser,
+  getProfile,
+  updateProfile,
+  bookingLapangan,
+  listBooking,
+};

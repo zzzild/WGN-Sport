@@ -69,11 +69,11 @@ const Login = () => {
 <button
   className="mt-10 bg-white/25 backdrop-blur-xl border border-white/40 
   px-7 py-2.5 rounded-full text-sm font-medium tracking-wide hover:bg-white/35 
-  hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 shadow-[0_0_10px_rgba(255,255,255,0.15)]"
+  hover:scale-[1.03] active:scale-[0.98] transition-all duration-300 shadow-[0_0_10px_rgba(255,255,255,0.15)] cursor-pointer"
   onClick={() => navigate('/')}
 
 >
-  Explore Courts
+  Beranda
 </button>
   </div>
 
