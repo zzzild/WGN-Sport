@@ -16,16 +16,7 @@ const AppContextProvider = (props) => {
   const [slotIndex, setSlotIndex] = useState(0);
   const [slotTime, setSlotTime] = useState([]); // ← MULTI SELECT
   const [lapanganSlots, setLapanganSlots] = useState([]);
-
-  const daysOfWeek = [
-    "Minggu",
-    "Senin",
-    "Selasa",
-    "Rabu",
-    "Kamis",
-    "Jumat",
-    "Sabtu",
-  ];
+  const [booking, setBooking] = useState([]);
 
   const getLapanganData = async () => {
     try {
@@ -226,16 +217,57 @@ const AppContextProvider = (props) => {
 
       if (data.success) {
         toast.success("Booking berhasil!");
-              await fetchLapanganInfo(lapanganId);
-      setSlotTime([]);
+        await fetchLapanganInfo(lapanganId);
+        setSlotTime([]);
         navigate("/my-booking");
       } else {
         toast.error(data.message);
       }
     } catch (error) {
+      console.log(error);
       toast.error("Terjadi kesalahan saat booking.");
     }
   };
+
+  const getUserBooking = async () => {
+    try {
+      const { data } = await axios.get(backendUrl + "/api/user/list-booking", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (data.success) {
+        setBooking(data.booking.reverse());
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Gagal mengambil data booking, coba lagi");
+    }
+  };
+
+  const cancelBooking = async (bookingId) => {
+    try {
+      const {data} = await axios.post(
+        backendUrl + "/api/user/cancel-booking",
+        {bookingId},
+        {headers: {
+          Authorization: `Bearer ${token}`,
+        }}
+      );
+
+      if (data.success) {
+        toast.success("Booking lapangan dibatalkan");
+        getUserBooking();
+        getLapanganData()
+      } else {
+        toast.error("Gagal membatalkan booking" + data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Terjadi kesalahan saat membatalkan booking")
+    }
+  }
 
   const value = {
     token,
@@ -260,6 +292,8 @@ const AppContextProvider = (props) => {
     setSlotIndex,
     slotTime,
     setSlotTime,
+    getUserBooking, booking,
+    cancelBooking
   };
 
   useEffect(() => {

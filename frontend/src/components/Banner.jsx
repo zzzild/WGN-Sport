@@ -1,8 +1,11 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { assets } from "../assets/assets";
+import { useContext } from "react";
+import { AppContext } from "../context/AppContext";
 
 const Banner = () => {
+  const { token } = useContext(AppContext);
   const navigate = useNavigate();
 
   return (
@@ -36,16 +39,27 @@ const Banner = () => {
             Daftar sekarang dan nikmati pengalaman sewa lapangan yang praktis,
             friendly, dan tanpa ribet!
           </p>
-
-          <button
-            onClick={() => {
-              navigate("/login");
-              scrollTo(0, 0);
-            }}
-        className="bg-white text-gray-700 text-sm sm:text-base px-7 py-2.5 rounded-full mt-5 hover:scale-105 transition-all duration-300 shadow-md font-semibold cursor-pointer"
-          >
-            Daftar Sekarang
-          </button>
+          {token ? (
+            <button
+              onClick={() => {
+                navigate("/lapangan");
+                scrollTo(0, 0);
+              }}
+              className="bg-white text-gray-700 text-sm sm:text-base px-7 py-2.5 rounded-full mt-5 hover:scale-105 transition-all duration-300 shadow-md font-semibold cursor-pointer"
+            >
+              Booking Sekarang
+            </button>
+          ) : (
+            <button
+              onClick={() => {
+                navigate("/login");
+                scrollTo(0, 0);
+              }}
+              className="bg-white text-gray-700 text-sm sm:text-base px-7 py-2.5 rounded-full mt-5 hover:scale-105 transition-all duration-300 shadow-md font-semibold cursor-pointer"
+            >
+              Daftar Sekarang
+            </button>
+          )}
         </div>
       </div>
     </div>

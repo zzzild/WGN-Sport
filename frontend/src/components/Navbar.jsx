@@ -22,9 +22,6 @@ const Navbar = () => {
   return false;
 };
 
-
-
-
   const navLinkClass = ({ isActive }) =>
     `px-4 py-2 rounded-full transition-all duration-300 ${
       isActive
@@ -73,7 +70,7 @@ const Navbar = () => {
                 src={assets.logoNoBg} // ← ganti sesuai lokasi logo kamu
                 alt="Logo"
                 className="w-20 sm:w-24 object-contain"
-                draggable={false}
+              draggable={false}
               />
             </NavLink>
           </div>

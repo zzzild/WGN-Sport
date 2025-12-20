@@ -220,9 +220,88 @@ const bookingLapangan = async (req, res) => {
 const listBooking = async (req, res) => {
   try {
     const userId = req.userId;
-    const booking = await bookingModel.find({ userId });
 
-    res.json({ success: true, booking });
+    const bookings = await bookingModel
+      .find({ userId, cancelled: false })
+      .sort({ date: -1 });
+
+    const validBookings = [];
+    const BOOKING_EXPIRE_HOUR = 2;
+
+    const isExpired = (bookingDate) => {
+      return Date.now() - bookingDate >= BOOKING_EXPIRE_HOUR * 60 * 60 * 1000;
+    };
+
+    for (const booking of bookings) {
+      if (!booking.payment && isExpired(booking.date)) {
+        const lapangan = await lapanganModel.findOne({
+          lapanganId: booking.lapanganId,
+        });
+
+        if (lapangan) {
+          const slotDateKey = booking.slotDate.trim();
+
+          if (lapangan.slots_booked[slotDateKey]) {
+            lapangan.slots_booked[slotDateKey] = lapangan.slots_booked[
+              slotDateKey
+            ].filter((time) => !booking.slotTime.includes(time));
+
+            if (lapangan.slots_booked[slotDateKey].length === 0) {
+              delete lapangan.slots_booked[slotDateKey];
+            }
+
+            lapangan.markModified("slots_booked");
+            await lapangan.save();
+          }
+        }
+
+        await bookingModel.findByIdAndDelete(booking._id);
+      } else {
+        validBookings.push(booking);
+      }
+    }
+
+    res.json({ success: true, booking: validBookings });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: false, message: error.message });
+  }
+};
+
+const cancelBooking = async (req, res) => {
+  try {
+    const { bookingId } = req.body;
+    const userId = req.userId;
+
+    const bookingData = await bookingModel.findOne({ bookingId });
+
+    if (!bookingData) {
+      return res.json({ success: false, message: "Booking tidak ditemukan" });
+    }
+
+    if (bookingData.userId !== userId) {
+      return res.json({ success: false, message: "Unauthorized action" });
+    }
+
+    await bookingModel.findOneAndUpdate({ bookingId }, { cancelled: true });
+
+    const { lapanganId, slotDate, slotTime } = bookingData;
+
+    const lapanganData = await lapanganModel.findOne({ lapanganId });
+
+    let slots_booked = lapanganData.slots_booked;
+
+    slots_booked[slotDate] = slots_booked[slotDate].filter(
+      (time) => !slotTime.includes(time)
+    );
+
+    if (slots_booked[slotDate].length === 0) {
+      delete slots_booked[slotDate];
+    }
+
+    await lapanganModel.findOneAndUpdate({ lapanganId }, { slots_booked });
+
+    res.json({ success: true, message: "Booking lapangan dibatalkan" });
   } catch (error) {
     console.log(error);
     res.json({ success: false, message: error.message });
@@ -236,4 +315,5 @@ export {
   updateProfile,
   bookingLapangan,
   listBooking,
+  cancelBooking,
 };

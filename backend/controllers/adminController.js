@@ -4,6 +4,7 @@ import { v2 as cloudinary } from "cloudinary";
 import lapanganModel from "../models/lapanganModel.js";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
+import bookingModel from "../models/bookingModel.js";
 
 // Login admin
 const loginAdmin = async (req, res) => {
@@ -121,27 +122,28 @@ const allLapangan = async (req, res) => {
 
 const getLapanganById = async (req, res) => {
   try {
-    const {lapanganId} = req.params;
+    const { lapanganId } = req.params;
 
-    const lapangan = await lapanganModel.findOne({lapanganId});
+    const lapangan = await lapanganModel.findOne({ lapanganId });
 
     if (!lapangan) {
       return res.json({
         success: false,
-        message: "Lapangan Tidak ditemukan"
-      })
+        message: "Lapangan tidak ditemukan",
+      });
     }
 
     res.json({
       success: true,
-      lapangan
-    })
+      lapangan,
+    });
   } catch (error) {
+    console.log(error);
     res.json({
       success: false,
-      message: error.message
-    })
+      message: error.message,
+    });
   }
-}
+};
 
 export { loginAdmin, registerAdmin, addLapangan, allLapangan, getLapanganById };
