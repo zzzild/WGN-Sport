@@ -1,35 +1,15 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets";
+import { AppContext } from "../context/AppContext";
 
 const MyProfile = () => {
-  // DUMMY DATA BIAR UI MUNCUL TANPA BACKEND
-  const [userData, setUserData] = useState({
-    image: assets.profile_pic, // ganti bebas
-    name: "Ahmad Zild",
-    email: "zild@example.com",
-    phone: "081234567890",
-    gender: "Laki-laki",
-    dob: "2005-12-12",
-    address: {
-      line1: "Jl. Mawar No. 12",
-      line2: "Bekasi, Jawa Barat",
-    },
-  });
+  
+  const {userData, setUserData, updateUserProfileData} = useContext(AppContext)
 
   const [isEdit, setIsEdit] = useState(false);
   const [image, setImage] = useState(null);
 
-  const updateUserProfileData = () => {
-    if (image) {
-      setUserData((prev) => ({
-        ...prev,
-        image: URL.createObjectURL(image),
-      }));
-    }
-    setIsEdit(false);
-  };
-
-  return (
+  return userData && (
     <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 gap-4 py-16 mt-16 bg-white text-gray-700">
 
       {/* FOTO PROFIL */}
@@ -116,32 +96,18 @@ const MyProfile = () => {
                   <input
                     className="bg-gray-50 mb-2 w-full"
                     type="text"
-                    value={userData.address.line1}
+                    value={userData.address}
                     onChange={(e) =>
                       setUserData((prev) => ({
                         ...prev,
-                        address: { ...prev.address, line1: e.target.value },
-                      }))
-                    }
-                  />
-
-                  <input
-                    className="bg-gray-50 w-full"
-                    type="text"
-                    value={userData.address.line2}
-                    onChange={(e) =>
-                      setUserData((prev) => ({
-                        ...prev,
-                        address: { ...prev.address, line2: e.target.value },
+                        address: e.target.value
                       }))
                     }
                   />
                 </>
               ) : (
                 <>
-                  {userData.address.line1}
-                  <br />
-                  {userData.address.line2}
+                  {userData.address}
                 </>
               )}
             </dd>
@@ -170,28 +136,6 @@ const MyProfile = () => {
               )}
             </dd>
           </div>
-
-          {/* DOB */}
-          <div className="grid grid-cols-1 gap-1 py-3 sm:grid-cols-3 sm:gap-4">
-            <dt className="font-medium text-gray-900">Tanggal Lahir</dt>
-            <dd className="text-gray-700 sm:col-span-2">
-              {isEdit ? (
-                <input
-                  className="bg-gray-100 max-w-28"
-                  type="date"
-                  value={userData.dob}
-                  onChange={(e) =>
-                    setUserData((prev) => ({
-                      ...prev,
-                      dob: e.target.value,
-                    }))
-                  }
-                />
-              ) : (
-                <span className="text-gray-400">{userData.dob}</span>
-              )}
-            </dd>
-          </div>
         </dl>
 
         {/* BUTTONS */}
@@ -199,7 +143,7 @@ const MyProfile = () => {
           {isEdit ? (
             <button
               className="border border-second px-8 py-2 rounded-full hover:bg-second hover:text-white transition-all"
-              onClick={updateUserProfileData}
+              onClick={() => updateUserProfileData(setIsEdit, image)}
             >
               Simpan Informasi
             </button>

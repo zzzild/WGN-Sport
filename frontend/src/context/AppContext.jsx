@@ -62,6 +62,34 @@ const AppContextProvider = (props) => {
     }
   };
 
+  const updateUserProfileData = async (isEdit, image) => {
+    try {
+      const formData = new FormData()
+
+      formData.append('name', userData.name)
+      formData.append('phone', userData.phone)
+      formData.append('address', userData.address)
+      formData.append('gender', userData.gender)
+      image && formData.append('image', image)
+
+      const {data} = await axios.post(backendUrl + '/api/user/update-profile', formData, 
+        {headers: {
+          Authorization: `Bearer ${token}`,
+        }})
+
+      if (data.success) {
+        toast.success("Profile Berhasil diperbarui.")
+        await loadProfileUserData()
+        isEdit(false)
+      } else {
+        toast.error("Gagal memperbarui profile: " +  (data.message || "Silahkan coba lagii"))
+      }
+    } catch (error) {
+      console.log(error)
+      toast.error('Gagal memperbarui profil, coba lagi')
+    }
+  }
+
   const registerUser = async (formData) => {
     try {
       const { data } = await axios.post(
@@ -293,7 +321,7 @@ const AppContextProvider = (props) => {
     slotTime,
     setSlotTime,
     getUserBooking, booking,
-    cancelBooking
+    cancelBooking, updateUserProfileData
   };
 
   useEffect(() => {

@@ -61,7 +61,7 @@ const MyBooking = () => {
   };
 
   return (
-    <div className="max-w-7xl w-full mx-auto px-4 py-16 mt-16 bg-white text-gray-700">
+    <div className="max-w-7xl w-full mx-auto px-4 py-16 pt-20 mt-16 bg-white text-gray-700">
       <p className="pb-3 mt-12 font-medium text-zinc-700 border-b text-lg">
         Jadwal saya
       </p>
