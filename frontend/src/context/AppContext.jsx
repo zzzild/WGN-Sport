@@ -297,6 +297,26 @@ const AppContextProvider = (props) => {
     }
   }
 
+  const submitPayment = async (bookingId, file) => {
+    try {
+      const formData = new FormData();
+      formData.append("proof", file);
+
+      await axios.post(
+        backendUrl + `/api/user/payment/${bookingId}`,
+        formData,
+        {headers: {
+          Authorization: `Bearer ${token}`,
+        }},
+      )
+      return true; // ✅ PENTING
+
+    } catch (error) {
+      console.log(error);
+      toast.error("Terjadi kesalahan saat mengupload bukti pembayaran")
+    }
+  }
+
   const value = {
     token,
     setToken,
@@ -321,7 +341,8 @@ const AppContextProvider = (props) => {
     slotTime,
     setSlotTime,
     getUserBooking, booking,
-    cancelBooking, updateUserProfileData
+    cancelBooking, updateUserProfileData,
+    submitPayment
   };
 
   useEffect(() => {

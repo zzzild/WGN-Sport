@@ -1,11 +1,14 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
+import PaymentModal from "../components/PaymentModal";
 
 const EXPIRE_MS = 2 * 60 * 60 * 1000; // 2 jam
 
 const MyBooking = () => {
   const { booking, getUserBooking, cancelBooking } = useContext(AppContext);
   const [, forceUpdate] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
   const months = [
     "",
@@ -37,16 +40,11 @@ const MyBooking = () => {
   const slotDateFormT = (slotDate) => {
     const dateArray = slotDate.split("_");
     return (
-      dateArray[0] +
-      " " +
-      months[Number(dateArray[1])] +
-      " " +
-      dateArray[2]
+      dateArray[0] + " " + months[Number(dateArray[1])] + " " + dateArray[2]
     );
   };
 
-  const formatRupiah = (angka) =>
-    "Rp " + angka.toLocaleString("id-ID");
+  const formatRupiah = (angka) => "Rp " + angka.toLocaleString("id-ID");
 
   const getRemainingTime = (bookingDate) => {
     const expireAt = bookingDate + EXPIRE_MS;
@@ -72,9 +70,7 @@ const MyBooking = () => {
         </p>
       ) : (
         booking.slice(0, 5).map((item, index) => {
-          const remaining = !item.payment
-            ? getRemainingTime(item.date)
-            : null;
+          const remaining = !item.payment ? getRemainingTime(item.date) : null;
 
           return (
             <div
@@ -140,13 +136,31 @@ const MyBooking = () => {
 
               {/* BUTTON */}
               <div className="flex flex-col gap-2 justify-end sm:items-end">
-                {!item.payment && remaining && (
-                  <button className="text-sm bg-teal-500 text-white w-full sm:w-48 py-2 rounded-lg hover:bg-teal-600">
+                {/* BELUM UPLOAD BUKTI */}
+                {!item.payment && !item.paymentProof && remaining && (
+                  <button
+                    onClick={() => {
+                      setSelectedBooking(item);
+                      setShowModal(true);
+                    }}
+                    className="text-sm bg-teal-500 text-white w-full sm:w-48 py-2 rounded-lg hover:bg-teal-600"
+                  >
                     Lakukan Pembayaran
                   </button>
                 )}
 
-                {!item.payment && (
+                {/* SUDAH UPLOAD BUKTI */}
+                {!item.payment && item.paymentProof && (
+                  <button
+                    disabled
+                    className="text-sm w-full sm:w-48 py-2 rounded-lg bg-blue-200 text-gray-500 cursor-not-allowed"
+                  >
+                    Menunggu Verifikasi
+                  </button>
+                )}
+
+                {/* BATAL HANYA JIKA BELUM UPLOAD */}
+                {!item.payment && !item.paymentProof && (
                   <button
                     onClick={() => cancelBooking(item.bookingId)}
                     className="text-sm w-full sm:w-48 py-2 rounded-lg border border-red-400 text-red-500 hover:bg-red-50"
@@ -159,6 +173,12 @@ const MyBooking = () => {
           );
         })
       )}
+
+      <PaymentModal
+        isOpen={showModal}
+        booking={selectedBooking}
+        onClose={() => setShowModal(false)}
+      />
     </div>
   );
 };

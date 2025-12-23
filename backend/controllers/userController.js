@@ -308,6 +308,34 @@ const cancelBooking = async (req, res) => {
   }
 };
 
+const uploadPaymentProof = async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+
+    if (!req.file) {
+      return res
+        .status(400)
+        .json({ message: "Bukti pembayaran wajib diupload" });
+    }
+
+    const upload = await cloudinary.uploader.upload(req.file.path, {
+      folder: "payment-proof",
+    });
+
+    await bookingModel.findOneAndUpdate(
+      { bookingId },
+      { paymentProof: upload.secure_url }
+    );
+
+    res.json({
+      success: true,
+      message: "Bukti pembayaran berhasil dikirim",
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 export {
   loginUser,
   registerUser,
@@ -316,4 +344,5 @@ export {
   bookingLapangan,
   listBooking,
   cancelBooking,
+  uploadPaymentProof
 };

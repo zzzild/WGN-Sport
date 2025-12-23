@@ -18,6 +18,7 @@ const bookingSchema = new mongoose.Schema({
   pricePerHour : {type: Number, require: true},
   totalHour : {type: Number, require: true},
   date: { type: Number, required: true, maxlength: 20 },
+  paymentProof: {type: String},
   cancelled: { type: Boolean, default: false },
   payment: { type: Boolean, default: false },
   isCompleted: { type: Boolean, default: false },
