@@ -35,7 +35,7 @@ function App() {
 
       {/* Tampilkan footer kecuali di halaman login */}
       {!hideLayout && <Footer />}
-    </>
+  </>
   );
 }
 
