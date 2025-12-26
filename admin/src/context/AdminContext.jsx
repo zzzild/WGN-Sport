@@ -6,7 +6,8 @@ import { useNavigate } from "react-router";
 export const AdminContext = createContext(null);
 
 const AdminContextProvider = ({ children }) => {
-  const [aToken, setAToken] = useState(localStorage.getItem("aToken") || "");
+  const [aToken, setAtoken] = useState(
+    localStorage.getItem("aToken") ? localStorage.getItem("aToken") : false)
   const navigate = useNavigate()
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
@@ -30,10 +31,10 @@ const AdminContextProvider = ({ children }) => {
 
         if (data.success) {
           localStorage.setItem("aToken", data.token);
-          setAToken(data.token);
+          setAtoken(data.token);
           toast.success("Login admin berhasil");
           
-          navigate('/')
+          navigate('/dashboard')
         } else {
           toast.error(data.message || "Login gagal");
         }
@@ -47,7 +48,7 @@ const AdminContextProvider = ({ children }) => {
 
         if (data.success) {
           localStorage.setItem("aToken", data.token);
-          setAToken(data.token);
+          setAtoken(data.token);
           toast.success("Registrasi admin berhasil");
 
           navigate('/')
@@ -63,7 +64,7 @@ const AdminContextProvider = ({ children }) => {
 
   const value = {
     aToken,
-    setAToken,
+    setAtoken,
     onSubmitHandler,
   };
 
