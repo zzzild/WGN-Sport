@@ -187,29 +187,33 @@ const bookingAdmin = async (req, res) => {
 
 const bookingComplete = async (req, res) => {
   try {
-    const {bookingId} = req.body;
-    const lapanganId = req.lapanganId
+    const { bookingId } = req.body;
 
-    const bookingData = await bookingModel.findOne({bookingId});
+    const bookingData = await bookingModel.findOne({ bookingId });
 
     if (!bookingData) {
-      return res.json({success: false, message: "Booking Not Found"})
+      return res.json({ success: false, message: "Booking Not Found" });
     }
 
-    if (String(bookingData.lapanganId) === String(lapanganId)) {
-      await bookingModel.findOneAndUpdate(
-        {bookingId},
-        {isCompleted: true}
-      );
-      return res.json({success: true, message: "Booking Completed"})
-    } else {
-      return res.json({success: false, message: 'Mark Failed'})
-    }
+    await bookingModel.findOneAndUpdate(
+      { bookingId },
+      {
+        isCompleted: true,
+        payment: true,
+      }
+    );
+
+    return res.json({
+      success: true,
+      message: "Booking completed & payment approved",
+    });
 
   } catch (error) {
-    res.json({success: false, message: error.message})
+    res.json({ success: false, message: error.message });
   }
-}
+};
+
+
 
 const bookingCancel = async (req, res) => {
   try {

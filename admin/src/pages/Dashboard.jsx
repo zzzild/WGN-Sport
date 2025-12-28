@@ -6,30 +6,7 @@ import { assets } from "../assets/assets";
 import { AdminContext } from "../context/AdminContext";
 
 const Dashboard = () => {
-  const { aToken, dashData, getDashData } = useContext(AdminContext);
-
-  const months = [
-    "",
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  const slotDateFormT = (slotDate) => {
-    const dateArray = slotDate.split("_");
-    return (
-      dateArray[0] + " " + months[Number(dateArray[1])] + " " + dateArray[2]
-    );
-  };
+  const { aToken, dashData, getDashData, slotDateFormT } = useContext(AdminContext);
 
   useEffect(() => {
     if (aToken) {

@@ -1,5 +1,5 @@
 import express from 'express'
-import { addLapangan, adminDashboard, allLapangan, bookingAdmin, bookingCancel, changeAvailability, deletelapangan, loginAdmin, registerAdmin, updateLapangan } from '../controllers/adminController.js'
+import { addLapangan, adminDashboard, allLapangan, bookingAdmin, bookingCancel, bookingComplete, changeAvailability, deletelapangan, loginAdmin, registerAdmin, updateLapangan } from '../controllers/adminController.js'
 import authAdmin from '../middlewares/authAdmin.js'
 import upload from '../middlewares/multer.js'
 
@@ -11,6 +11,7 @@ adminRouter.post('/add-lapangan', authAdmin, upload.single('image'), addLapangan
 adminRouter.get('/booking', authAdmin, bookingAdmin)
 adminRouter.get('/dashboard', authAdmin, adminDashboard)
 adminRouter.post('/cancel-booking', authAdmin, bookingCancel)
+adminRouter.post('/complete-booking', authAdmin, bookingComplete)
 adminRouter.post('/delete-lapangan', authAdmin, deletelapangan)
 adminRouter.post('/update-lapangan', authAdmin, updateLapangan)
 adminRouter.post('/change-availability', authAdmin, changeAvailability)
