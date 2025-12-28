@@ -18,7 +18,7 @@ const Sidebar = () => {
             }
             to="/admin-dashboard"
           >
-            <img src={assets.home_icon} alt="" />
+            <img className='w-8' src={assets.home} alt="" />
             <p className="hidden md:block">Dashboard</p>
           </NavLink>
           <NavLink
@@ -29,7 +29,7 @@ const Sidebar = () => {
             }
             to={"/all-booking"}
           >
-            <img src={assets.appointment_icon} alt="" />
+            <img className='w-8' src={assets.calender} alt="" />
             <p className="hidden md:block">Penjadwalan</p>
           </NavLink>
           <NavLink
@@ -40,7 +40,7 @@ const Sidebar = () => {
             }
             to={"/list-lapangan"}
           >
-            <img src={assets.people_icon} alt="" />
+            <img className='w-8' src={assets.field} alt="" />
             <p className="hidden md:block">Daftar Lapangan</p>
           </NavLink>
         </ul>

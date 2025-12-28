@@ -20,11 +20,11 @@ function App() {
 
       {aToken ? (
         // ===== ADMIN LAYOUT =====
-        <div className="flex">
-          <Sidebar />
-
-          <div className="flex-1">
+        <div >
             <Navbar />
+
+          <div className="flex">
+          <Sidebar />
 
             <Routes>
               <Route path="/dashboard" element={<Dashboard />} />

@@ -9,6 +9,7 @@ const AdminContextProvider = ({ children }) => {
   const [aToken, setAtoken] = useState(
     localStorage.getItem("aToken") ? localStorage.getItem("aToken") : false)
   const navigate = useNavigate()
+  const [dashData, setDashData] = useState()
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -62,10 +63,33 @@ const AdminContextProvider = ({ children }) => {
     }
   };
 
+ const getDashData = async () => {
+  try {
+    const { data } = await axios.get(
+      backendUrl + "/api/admin/dashboard",
+      {
+        headers: {
+          Authorization: `Bearer ${aToken}`,
+        },
+      }
+    );
+
+    if (data.success) {
+      setDashData(data.dashData);
+    } else {
+      toast.error(data.message);
+    }
+  } catch (error) {
+    toast.error(error.response?.data?.message || error.message);
+  }
+};
+
+
   const value = {
     aToken,
     setAtoken,
     onSubmitHandler,
+    getDashData, dashData
   };
 
   return (

@@ -146,4 +146,161 @@ const getLapanganById = async (req, res) => {
   }
 };
 
-export { loginAdmin, registerAdmin, addLapangan, allLapangan, getLapanganById };
+const adminDashboard = async (req, res) => {
+  try {
+    const lapangan = await lapanganModel.find({});
+    const user = await userModel.find({});
+    const booking = await bookingModel.find({});
+    
+
+    let earning = 0
+
+    booking.map((item) => {
+      if (item.isCompleted || item.payment) {
+        earning += item.amount
+      }
+    })
+
+    const dashData = {
+      earning,
+      lapangan: lapangan.length,
+      booking: booking.length,
+      client: user.length,
+      latestBooking: booking.reverse().slice(0, 5),
+    };
+
+    res.json({ success: true, dashData });
+  } catch (error) {
+    console.log(error);
+    res.json({ success: true, message: error.message });
+  }
+};
+
+const bookingAdmin = async (req, res) => {
+  try {
+    const booking = await bookingModel.find({});
+    res.json({ success: true, booking });
+  } catch (error) {
+    return res.json({ success: false, message: error.message });
+  }
+};
+
+const bookingComplete = async (req, res) => {
+  try {
+    const {bookingId} = req.body;
+    const lapanganId = req.lapanganId
+
+    const bookingData = await bookingModel.findOne({bookingId});
+
+    if (!bookingData) {
+      return res.json({success: false, message: "Booking Not Found"})
+    }
+
+    if (String(bookingData.lapanganId) === String(lapanganId)) {
+      await bookingModel.findOneAndUpdate(
+        {bookingId},
+        {isCompleted: true}
+      );
+      return res.json({success: true, message: "Booking Completed"})
+    } else {
+      return res.json({success: false, message: 'Mark Failed'})
+    }
+
+  } catch (error) {
+    res.json({success: false, message: error.message})
+  }
+}
+
+const bookingCancel = async (req, res) => {
+  try {
+    const { bookingId } = req.body;
+    const bookingData = await bookingModel.findOne({ bookingId });
+
+    await bookingModel.findOneAndUpdate({ bookingId }, { cancelled: true });
+
+    const { lapanganId, slotDate, slotTime } = bookingData;
+    const lapanganData = await lapanganModel.findOne({ lapanganId });
+    let slots_booked = lapanganData.slots_booked;
+    slots_booked[slotDate] = slots_booked[slotDate].filter(
+      (e) => e !== slotTime
+    );
+
+    await lapanganModel.findOneAndUpdate({ lapanganId }, { slots_booked });
+
+    res.json({ success: true, message: "Booking Canceeled" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+const deletelapangan = async (req, res) => {
+  try {
+    const { lapanganId } = req.body;
+    if (!lapanganId) {
+      return res.json({ success: false, message: "Lapangan is required" });
+    }
+
+    const deleted = await lapanganModel.findOneAndDelete({ lapanganId });
+
+    if (!deleted) {
+      return res.json({ success: false, message: "Lapangan not found" });
+    }
+
+    res.json({ success: true, message: "Lapangan deleted successfully" });
+  } catch (error) {
+    res.json({ success: false, message: error.message });
+  }
+};
+
+const changeAvailability = async (req, res) => {
+  try {
+    const {lapanganId} = req.body
+    const lapanganData = await lapanganModel.findOne({lapanganId})
+
+    if (!lapanganData) {
+      return res.json({success: false, message: "Lapangan tidak ditemukan"})
+    }
+
+    await lapanganModel.findOneAndUpdate(
+      {lapanganId},
+      {available: !lapanganData.available} 
+    )
+
+    res.json({success: true, message: 'Availability changed'})
+  } catch (error) {
+    console.log(error)
+    res.json({success: false, message: error.message})
+  }
+}
+
+// Probably get eror
+const updateLapangan = async (req, res) => {
+  try {
+    const {name, image, price, available} = req.body
+    const lapanganId = req.lapanganId;
+
+    await lapanganModel.findOneAndUpdate({lapanganId}, {name, image, price, available})
+
+    res.json({success: true, message: 'Lapangan update'})
+  } catch (error) {
+    console.log(error)
+    res.json({success: false, message: error.message})
+  }
+}
+
+
+
+export {
+  loginAdmin,
+  registerAdmin,
+  addLapangan,
+  allLapangan,
+  getLapanganById,
+  adminDashboard,
+  bookingCancel,
+  bookingAdmin,
+  deletelapangan,
+  changeAvailability,
+  updateLapangan,
+  bookingComplete
+};
