@@ -19,6 +19,11 @@ const bookingSchema = new mongoose.Schema({
   totalHour : {type: Number, require: true},
   date: { type: Number, required: true, maxlength: 20 },
   paymentProof: {type: String},
+    paymentStatus: {
+    type: String,
+    enum: ["pending", "waiting", "rejected", "approved"],
+    default: "pending",
+  },
   cancelled: { type: Boolean, default: false },
   payment: { type: Boolean, default: false },
   isCompleted: { type: Boolean, default: false },

@@ -315,7 +315,7 @@ const uploadPaymentProof = async (req, res) => {
     if (!req.file) {
       return res
         .status(400)
-        .json({ message: "Bukti pembayaran wajib diupload" });
+        .json({ success: false, message: "Bukti pembayaran wajib diupload" });
     }
 
     const upload = await cloudinary.uploader.upload(req.file.path, {
@@ -324,17 +324,21 @@ const uploadPaymentProof = async (req, res) => {
 
     await bookingModel.findOneAndUpdate(
       { bookingId },
-      { paymentProof: upload.secure_url }
+      {
+        paymentProof: upload.secure_url,
+        paymentStatus: "waiting",
+      }
     );
 
     res.json({
       success: true,
-      message: "Bukti pembayaran berhasil dikirim",
+      message: "Bukti pembayaran berhasil dikirim & menunggu verifikasi",
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ success: false, message: error.message });
   }
 };
+
 
 export {
   loginUser,

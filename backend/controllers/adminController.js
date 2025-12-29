@@ -190,24 +190,31 @@ const bookingComplete = async (req, res) => {
     const { bookingId } = req.body;
 
     const bookingData = await bookingModel.findOne({ bookingId });
-
     if (!bookingData) {
       return res.json({ success: false, message: "Booking Not Found" });
+    }
+
+    // optional validation
+    if (bookingData.paymentStatus !== "waiting") {
+      return res.json({
+        success: false,
+        message: "Booking belum dalam status menunggu verifikasi",
+      });
     }
 
     await bookingModel.findOneAndUpdate(
       { bookingId },
       {
-        isCompleted: true,
+        paymentStatus: "approved",
         payment: true,
+        isCompleted: true,
       }
     );
 
     return res.json({
       success: true,
-      message: "Booking completed & payment approved",
+      message: "Pembayaran disetujui & booking dikonfirmasi",
     });
-
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
@@ -215,46 +222,70 @@ const bookingComplete = async (req, res) => {
 
 
 
+
 const bookingCancel = async (req, res) => {
-  try {
+    try {
     const { bookingId } = req.body;
 
     const bookingData = await bookingModel.findOne({ bookingId });
-
     if (!bookingData) {
       return res.json({ success: false, message: "Booking tidak ditemukan" });
     }
 
     await bookingModel.findOneAndUpdate(
       { bookingId },
-      { cancelled: true }
+      {
+        paymentStatus: "rejected",
+        paymentProof: null, // biar user upload ulang
+      }
     );
 
-    const { lapanganId, slotDate, slotTime } = bookingData;
-
-    const lapanganData = await lapanganModel.findOne({ lapanganId });
-
-    let slots_booked = lapanganData.slots_booked;
-
-    slots_booked[slotDate] = slots_booked[slotDate].filter(
-      (time) => !slotTime.includes(time)
-    );
-
-    // bersihin tanggal kosong
-    if (slots_booked[slotDate].length === 0) {
-      delete slots_booked[slotDate];
-    }
-
-    await lapanganModel.findOneAndUpdate(
-      { lapanganId },
-      { slots_booked }
-    );
-
-    res.json({ success: true, message: "Booking dibatalkan & slot dirilis" });
-
+    res.json({
+      success: true,
+      message: "Pembayaran ditolak, user dapat upload ulang bukti",
+    });
   } catch (error) {
     res.json({ success: false, message: error.message });
   }
+  // try {
+  //   const { bookingId } = req.body;
+
+  //   const bookingData = await bookingModel.findOne({ bookingId });
+
+  //   if (!bookingData) {
+  //     return res.json({ success: false, message: "Booking tidak ditemukan" });
+  //   }
+
+  //   await bookingModel.findOneAndUpdate(
+  //     { bookingId },
+  //     { cancelled: true }
+  //   );
+
+  //   const { lapanganId, slotDate, slotTime } = bookingData;
+
+  //   const lapanganData = await lapanganModel.findOne({ lapanganId });
+
+  //   let slots_booked = lapanganData.slots_booked;
+
+  //   slots_booked[slotDate] = slots_booked[slotDate].filter(
+  //     (time) => !slotTime.includes(time)
+  //   );
+
+  //   // bersihin tanggal kosong
+  //   if (slots_booked[slotDate].length === 0) {
+  //     delete slots_booked[slotDate];
+  //   }
+
+  //   await lapanganModel.findOneAndUpdate(
+  //     { lapanganId },
+  //     { slots_booked }
+  //   );
+
+  //   res.json({ success: true, message: "Booking dibatalkan & slot dirilis" });
+
+  // } catch (error) {
+  //   res.json({ success: false, message: error.message });
+  // }
 };
 
 

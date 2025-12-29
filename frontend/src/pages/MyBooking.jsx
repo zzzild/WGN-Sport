@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { AppContext } from "../context/AppContext";
 import PaymentModal from "../components/PaymentModal";
+import { downloadInvoice } from "../utils/downloadInvoice";
 
 const EXPIRE_MS = 2 * 60 * 60 * 1000; // 2 jam
 
@@ -94,13 +95,20 @@ const MyBooking = () => {
 
                 {/* STATUS */}
                 <span
-                  className={`inline-block mt-1 px-2 py-[2px] text-xs rounded-full ${
-                    item.payment
-                      ? "bg-green-100 text-green-700"
-                      : "bg-yellow-100 text-yellow-700"
-                  }`}
+                  className={`inline-block mt-1 px-2 py-[2px] text-xs rounded-full
+  ${
+    item.paymentStatus === "approved"
+      ? "bg-green-100 text-green-700"
+      : item.paymentStatus === "rejected"
+      ? "bg-red-100 text-red-600"
+      : "bg-yellow-100 text-yellow-700"
+  }`}
                 >
-                  {item.payment ? "Selesai" : "Menunggu Pembayaran"}
+                  {item.paymentStatus === "approved"
+                    ? "Pembayaran Diterima"
+                    : item.paymentStatus === "rejected"
+                    ? "Pembayaran Ditolak"
+                    : "Menunggu Verifikasi"}
                 </span>
 
                 {/* ANNOUNCEMENT EXPIRED */}
@@ -137,25 +145,52 @@ const MyBooking = () => {
               {/* BUTTON */}
               <div className="flex flex-col gap-2 justify-end sm:items-end">
                 {/* BELUM UPLOAD BUKTI */}
-                {!item.payment && !item.paymentProof && remaining && (
+                {/* PENDING / BELUM UPLOAD */}
+                {item.paymentStatus === "pending" &&
+                  !item.paymentProof &&
+                  remaining && (
+                    <button
+                      onClick={() => {
+                        setSelectedBooking(item);
+                        setShowModal(true);
+                      }}
+                      className="text-sm bg-teal-500 text-white w-full sm:w-48 py-2 rounded-lg hover:bg-teal-600"
+                    >
+                      Lakukan Pembayaran
+                    </button>
+                  )}
+
+                  {/* PAYMENT APPROVED → DOWNLOAD INVOICE */}
+{item.paymentStatus === "approved" && (
+  <button
+    onClick={() => downloadInvoice(item)}
+    className="text-sm bg-green-600 text-white w-full sm:w-48 py-2 rounded-lg hover:bg-green-700"
+  >
+    Download Invoice
+  </button>
+)}
+
+
+                {/* MENUNGGU VERIFIKASI */}
+                {item.paymentStatus === "pending" && item.paymentProof && (
+                  <button
+                    disabled
+                    className="text-sm w-full sm:w-48 py-2 rounded-lg bg-blue-200 text-gray-500 cursor-not-allowed"
+                  >
+                    Menunggu Verifikasi Admin
+                  </button>
+                )}
+
+                {/* DITOLAK → BOLEH UPLOAD ULANG */}
+                {item.paymentStatus === "rejected" && (
                   <button
                     onClick={() => {
                       setSelectedBooking(item);
                       setShowModal(true);
                     }}
-                    className="text-sm bg-teal-500 text-white w-full sm:w-48 py-2 rounded-lg hover:bg-teal-600"
+                    className="text-sm bg-orange-500 text-white w-full sm:w-48 py-2 rounded-lg hover:bg-orange-600"
                   >
-                    Lakukan Pembayaran
-                  </button>
-                )}
-
-                {/* SUDAH UPLOAD BUKTI */}
-                {!item.payment && item.paymentProof && (
-                  <button
-                    disabled
-                    className="text-sm w-full sm:w-48 py-2 rounded-lg bg-blue-200 text-gray-500 cursor-not-allowed"
-                  >
-                    Menunggu Verifikasi
+                    Upload Ulang Bukti Pembayaran
                   </button>
                 )}
 
