@@ -160,16 +160,15 @@ const MyBooking = () => {
                     </button>
                   )}
 
-                  {/* PAYMENT APPROVED → DOWNLOAD INVOICE */}
-{item.paymentStatus === "approved" && (
-  <button
-    onClick={() => downloadInvoice(item)}
-    className="text-sm bg-green-600 text-white w-full sm:w-48 py-2 rounded-lg hover:bg-green-700"
-  >
-    Download Invoice
-  </button>
-)}
-
+                {/* PAYMENT APPROVED → DOWNLOAD INVOICE */}
+                {item.paymentStatus === "approved" && (
+                  <button
+                    onClick={() => downloadInvoice(item)}
+                    className="text-sm bg-green-600 text-white w-full sm:w-48 py-2 rounded-lg hover:bg-green-700"
+                  >
+                    Download Invoice
+                  </button>
+                )}
 
                 {/* MENUNGGU VERIFIKASI */}
                 {item.paymentStatus === "pending" && item.paymentProof && (

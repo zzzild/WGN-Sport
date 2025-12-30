@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import Home from "./pages/Home";
 import Lapangan from "./pages/Lapangan";
@@ -10,8 +10,15 @@ import MyProfile from "./pages/MyProfile";
 import MyBooking from "./pages/MyBooking";
 import Booking from "./pages/Booking";
 import { ToastContainer } from 'react-toastify'
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function App() {
+    useEffect(() => {
+    AOS.init({
+      duration: 1000, // durasi animasi dalam ms
+    });
+  }, []);
   const location = useLocation();
 
   // List halaman yang TIDAK BOLEH ada navbar & footer

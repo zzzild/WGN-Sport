@@ -220,9 +220,6 @@ const bookingComplete = async (req, res) => {
   }
 };
 
-
-
-
 const bookingCancel = async (req, res) => {
     try {
     const { bookingId } = req.body;
@@ -332,18 +329,57 @@ const changeAvailability = async (req, res) => {
 // Probably get eror
 const updateLapangan = async (req, res) => {
   try {
-    const {name, image, price, available} = req.body
-    const lapanganId = req.lapanganId;
+    const { name, price } = req.body;
+    const { lapanganId } = req.params;
 
-    await lapanganModel.findOneAndUpdate({lapanganId}, {name, image, price, available})
+    if (!name || !price) {
+      return res.json({
+        success: false,
+        message: "Name dan price wajib diisi",
+      });
+    }
 
-    res.json({success: true, message: 'Lapangan update'})
+    let updateData = {
+      name,
+      price,
+    };
+
+    // kalau admin upload gambar baru
+    if (req.file) {
+      const imageUpload = await cloudinary.uploader.upload(
+        req.file.path,
+        { resource_type: "image" }
+      );
+
+      updateData.image = imageUpload.secure_url;
+    }
+
+    const updatedLapangan = await lapanganModel.findOneAndUpdate(
+      { lapanganId },
+      updateData,
+      { new: true }
+    );
+
+    if (!updatedLapangan) {
+      return res.json({
+        success: false,
+        message: "Lapangan tidak ditemukan",
+      });
+    }
+
+    res.json({
+      success: true,
+      message: "Lapangan berhasil diupdate",
+      lapangan: updatedLapangan,
+    });
   } catch (error) {
-    console.log(error)
-    res.json({success: false, message: error.message})
+    console.log(error);
+    res.json({
+      success: false,
+      message: error.message,
+    });
   }
-}
-
+};
 
 
 export {

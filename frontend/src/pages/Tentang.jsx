@@ -9,13 +9,20 @@ const Tentang = () => {
       <div
         className="relative w-full h-[50vh] bg-cover bg-center rounded-b-[2vw] flex flex-col items-center justify-center text-center"
         style={{ backgroundImage: `url(${assets.header_img})` }}
+        data-aos="fade-down"
+        data-aos-duration="1200"
+        data-aos-once="true"
       >
         <div className="absolute inset-0 bg-black/50 rounded-b-[2vw]" />
         <div className="relative text-white">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-2 tracking-wide">
+          <h2 className="text-2xl md:text-3xl font-semibold mb-2 tracking-wide" data-aos="fade-up"
+            data-aos-delay="200"
+            data-aos-once="true">
             Tentang Kami — <span className="text-teal-400">WGN Sport</span>
           </h2>
-          <p className="text-xs md:text-sm text-gray-200 font-light">
+          <p className="text-xs md:text-sm text-gray-200 font-light"  data-aos="fade-up"
+            data-aos-delay="400"
+            data-aos-once="true">
             Temukan siapa kami dan misi kami dalam menghadirkan pengalaman
             olahraga terbaik
           </p>
@@ -23,7 +30,9 @@ const Tentang = () => {
       </div>
 
       {/* CONTENT SECTION */}
-      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 gap-4 py-16 bg-white text-gray-700">
+      <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 gap-4 py-16 bg-white text-gray-700" data-aos="fade-up"
+          data-aos-duration="800"
+          data-aos-once="true">
         {/* === TITLE & INTRO (LEFT ALIGNED) === */}
         <div className="mb-10">
           <h1 className="text-3xl md:text-4xl font-semibold text-gray-800 mb-3">
