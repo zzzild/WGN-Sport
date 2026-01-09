@@ -5,14 +5,14 @@ import { assets } from "../assets/assets";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { token, registUser, loginUser } = useContext(AppContext);
+  const { token, registerUser, loginUser } = useContext(AppContext);
 
   const [state, setState] = useState("Login");
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
-  const [telp, setTelp] = useState("");
+  const [phone, setPhone] = useState("");
   const [gender, setGender] = useState("");
   const [address, setAddress] = useState("");
 
@@ -20,7 +20,7 @@ const Login = () => {
     e.preventDefault();
 
     if (state === "Sign Up") {
-      await registUser({ email, password, name, telp, gender, address });
+      await registerUser({ email, password, name, phone, gender, address });
     } else {
       await loginUser({ email, password });
     }
@@ -107,6 +107,7 @@ const Login = () => {
                 <input
                   type="password"
                   required
+                  maxLength={8}
                   className="border rounded-md w-full p-2 mt-1"
                   placeholder="Enter your password"
                   value={password}
@@ -148,8 +149,9 @@ const Login = () => {
                 <input
                   required
                   type="password"
+                  maxLength={8}
                   className="border rounded-md w-full p-2 mt-1"
-                  placeholder="Minimal 6 karakter"
+                  placeholder="Minimal 8 karakter"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                 />
@@ -163,8 +165,8 @@ const Login = () => {
                     type="text"
                     className="border rounded-md w-full p-2 mt-1"
                     placeholder="0812345678"
-                    value={telp}
-                    onChange={(e) => setTelp(e.target.value)}
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
                   />
                 </div>
 

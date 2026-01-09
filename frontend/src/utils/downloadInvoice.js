@@ -1,6 +1,6 @@
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import logo from "../assets/logo-NoBg.png";
+import logo from "../assets/logo-nobg.png";
 
 export const downloadInvoice = (booking) => {
   const doc = new jsPDF("p", "mm", "a4");
