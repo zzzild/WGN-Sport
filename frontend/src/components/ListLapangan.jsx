@@ -2,10 +2,18 @@ import React, { useContext, useEffect } from "react";
 import { assets } from "../assets/assets";
 import { useNavigate } from "react-router-dom";
 import { AppContext } from "../context/AppContext";
+import { toast } from "react-toastify";
 
 const ListLapangan = () => {
   const navigate = useNavigate();
-  const { lapangan } = useContext(AppContext);
+  const { lapangan, token } = useContext(AppContext);
+
+  const handleBookingClick = (lapanganId) => {
+    if (!token) {
+      toast.info("Silakan login terlebih dahulu untuk melakukan booking.");
+    }
+    navigate(`/booking/${lapanganId}`)
+  }
 
   useEffect(() => {}, [lapangan]);
 
@@ -129,8 +137,7 @@ const ListLapangan = () => {
                   >
                     <button
                       onClick={() =>
-                        navigate(`/booking/${item.lapanganId}`)
-                      }
+                        handleBookingClick(item.lapanganId)}
                       className="block bg-teal-500 px-6 py-3 text-xs font-bold text-white uppercase
                       transition hover:bg-teal-600 cursor-pointer"
                     >
